@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stay Luxe — Advanced Reports Table (Interactive Mockup)</title>
+<style>
+  :root{
+    --orange:#E8821E;--orange-d:#cf7117;--ink:#20242e;--muted:#7b8493;--bg:#f4f5f7;
+    --card:#fff;--line:#e8eaef;--line2:#eef0f4;--sb:#0b0b0c;--sbtxt:#c2c7d2;
+    --green:#1a9d5a;--greenbg:#d6f0e0;--red:#d64550;--redbg:#fbdcdd;--amber:#c08a1e;
+    --amberbg:#fbeecb;--gray:#5f6675;--graybg:#e6e8ed;--blue:#3566c4;--head:#efe9dd;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:13px;
+    font-family:'Inter','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif}
+  .app{display:flex;min-height:100vh}
+  .side{width:172px;background:var(--sb);color:var(--sbtxt);flex-shrink:0;padding:14px 12px}
+  .brand{display:flex;justify-content:center;gap:6px;color:#fff;letter-spacing:3px;font-size:13px;font-weight:600;padding:8px 0 18px}
+  .brand .gem{color:var(--orange)}
+  .nav a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;color:var(--sbtxt);margin-bottom:1px;cursor:pointer;font-size:12px;font-weight:500}
+  .nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav a.active{background:var(--orange);color:#fff;font-weight:600}
+  .nav .ic{width:15px;text-align:center;opacity:.85}
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:13px 22px;display:flex;align-items:center;justify-content:space-between}
+  .topbar .wb{font-size:15px;font-weight:600}
+  .userpill{display:flex;align-items:center;gap:8px;background:#15171d;color:#fff;border-radius:22px;padding:4px 12px 4px 4px;font-size:12px;font-weight:600}
+  .ava{width:26px;height:26px;border-radius:50%;background:var(--orange);display:grid;place-items:center;font-size:11px}
+  .wrap{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+  .pghead{display:flex;align-items:center;justify-content:space-between}
+  .pghead h1{margin:0;font-size:19px}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .btn:hover{border-color:#cfd4de}
+  .btn.org{background:var(--orange);border-color:var(--orange);color:#fff}
+  .btn.org:hover{background:var(--orange-d)}
+  .btn.gh{background:transparent;border-color:transparent;color:var(--muted)}
+  select,input{font-family:inherit}
+  select{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer}
+  .search{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:210px}
+  .search input{border:none;outline:none;font-size:13px;width:100%;background:transparent}
+  .spacer{flex:1}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-height:8px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:18px;padding:4px 10px;font-size:11px;color:var(--ink);display:inline-flex;gap:6px;align-items:center}
+  .chip b{font-weight:600}
+  .chip .x{cursor:pointer;color:var(--muted)}
+  .count{font-size:12px;color:var(--muted)}
+  /* grid */
+  .gridwrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:64vh}
+  table{border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12.5px;width:max-content;min-width:100%}
+  th,td{padding:0;border-bottom:1px solid var(--line2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  thead th{position:sticky;top:0;background:var(--head);z-index:6}
+  thead tr.filters th{top:38px;background:#f6f3ec;z-index:5}
+  .hd{display:flex;align-items:center;gap:6px;padding:10px 10px;color:#6a6256;font-size:11px;font-weight:700;letter-spacing:.3px;cursor:pointer;user-select:none;position:relative}
+  .hd .lab{flex:1;overflow:hidden;text-overflow:ellipsis}
+  .hd .srt{font-size:10px;color:var(--orange);min-width:14px;text-align:center}
+  .hd .pin{opacity:.35;font-size:11px}
+  .hd .pin.on{opacity:1;color:var(--orange)}
+  .rsz{position:absolute;right:0;top:0;width:7px;height:100%;cursor:col-resize}
+  .rsz:hover{background:rgba(232,130,30,.3)}
+  td .cell{padding:10px 10px;overflow:hidden;text-overflow:ellipsis}
+  td.num .cell,th.num .hd{justify-content:flex-end;text-align:right}
+  tbody tr:hover td{background:#faf7f1}
+  .fcell{padding:5px 6px}
+  .fcell input,.fcell select{width:100%;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:#fff}
+  .pinned{position:sticky;background:#fff!important;z-index:4}
+  thead .pinned{z-index:7}
+  thead tr.filters .pinned{z-index:6;background:#f6f3ec!important}
+  thead tr.head .pinned{background:var(--head)!important}
+  .pinlast{box-shadow:6px 0 6px -4px rgba(0,0,0,.12)}
+  .pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+  .p-green{background:var(--greenbg);color:var(--green)}
+  .p-red{background:var(--redbg);color:var(--red)}
+  .p-amber{background:var(--amberbg);color:var(--amber)}
+  .p-gray{background:var(--graybg);color:var(--gray)}
+  .link{color:var(--blue)}
+  .neg{color:var(--red)}
+  /* column manager */
+  .pop{position:absolute;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 12px 34px rgba(20,30,60,.18);z-index:30;width:280px;padding:12px;display:none}
+  .pop.show{display:block}
+  .pop h4{margin:0 0 8px;font-size:13px}
+  .pop .psearch{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;margin-bottom:8px}
+  .collist{max-height:280px;overflow:auto}
+  .colitem{display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:7px;font-size:12px}
+  .colitem:hover{background:#f5f6f8}
+  .colitem.dragover{background:#fdebd8}
+  .colitem .grip{cursor:grab;color:var(--muted)}
+  .colitem .nm{flex:1;overflow:hidden;text-overflow:ellipsis}
+  .colitem .pinbtn{cursor:pointer;opacity:.4;font-size:12px}
+  .colitem .pinbtn.on{opacity:1;color:var(--orange)}
+  .poprow{display:flex;gap:8px;margin-top:10px}
+  .menuwrap{position:relative}
+  .fbadge{background:var(--orange);color:#fff;border-radius:11px;font-size:10px;padding:1px 6px;font-weight:700;display:none}
+  .filterpop{width:540px;left:0;padding:0}
+  .fp-body{display:flex;max-height:340px}
+  .fp-cats{width:200px;border-right:1px solid var(--line);padding:8px;overflow:auto}
+  .fp-cat{padding:9px 10px;border-radius:7px;font-size:12.5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--ink)}
+  .fp-cat:hover{background:#f5f6f8}
+  .fp-cat.on{background:#fdebd8;color:var(--orange-d);font-weight:600}
+  .fp-badge{background:var(--orange);color:#fff;border-radius:11px;font-size:10px;padding:1px 7px;font-weight:700}
+  .fp-opts{flex:1;padding:10px 12px;overflow:auto}
+  .fp-opt{display:flex;align-items:center;gap:9px;padding:7px 6px;font-size:12.5px;border-radius:6px;cursor:pointer}
+  .fp-opt:hover{background:#f5f6f8}
+  .fp-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .d-green{background:var(--green)}.d-amber{background:var(--amber)}.d-red{background:var(--red)}.d-gray{background:var(--gray)}.d-blue{background:var(--blue)}
+  .fp-range{display:flex;gap:14px}
+  .fp-range label{display:flex;flex-direction:column;font-size:11px;color:var(--muted);gap:4px}
+  .fp-range input{padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;width:130px}
+  .fp-foot{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-top:1px solid var(--line)}
+  .note{font-size:11px;color:var(--muted);font-style:italic}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">STAY <span class="gem">◆</span> LUXE</div>
+    <nav class="nav">
+      <a><span class="ic">▦</span> Dashboard</a>
+      <a><span class="ic">☺</span> Customer Mgmt</a>
+      <a><span class="ic">⌂</span> Host Mgmt</a>
+      <a><span class="ic">▤</span> Property Mgmt</a>
+      <a class="active"><span class="ic">▣</span> Reports</a>
+      <a><span class="ic">◴</span> Bookings</a>
+      <a><span class="ic">$</span> Currency Mgmt</a>
+      <a><span class="ic">⚙</span> Configuration</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="wb">Welcome back!</div>
+      <span class="userpill"><span class="ava">AU</span> Admin User ▾</span>
+    </div>
+
+    <div class="wrap">
+      <div class="pghead">
+        <h1>Reports</h1>
+        <div class="count" id="rowCount"></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search">🔍<input id="globalSearch" placeholder="Search all columns…"></div>
+        <div class="menuwrap">
+          <button class="btn" onclick="toggleFilterPanel(event)">⛃ Filters <span class="fbadge" id="fCount"></span> ▾</button>
+          <div class="pop filterpop" id="filterPop"></div>
+        </div>
+        <select id="viewSelect" title="Saved views"></select>
+        <button class="btn" onclick="saveView()">★ Save view</button>
+        <button class="btn gh" onclick="deleteView()">🗑 Delete</button>
+        <div class="spacer"></div>
+        <div class="menuwrap">
+          <button class="btn" onclick="toggleColPop(event)">⊞ Columns (<span id="colCount"></span>) ▾</button>
+          <div class="pop" id="colPop">
+            <h4>Manage columns</h4>
+            <input class="psearch" id="colSearch" placeholder="Search columns…" oninput="renderColList()">
+            <div class="collist" id="colList"></div>
+            <div class="poprow">
+              <button class="btn" style="flex:1" onclick="resetCols()">Reset</button>
+              <button class="btn org" style="flex:1" onclick="toggleColPop(event)">Done</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn" onclick="clearFilters()">⌫ Clear filters</button>
+        <button class="btn org" onclick="alert('Export current view → CSV/XLSX\\nProduction: /admin/api/reports?view=…&format=csv')">⭳ Export</button>
+      </div>
+
+      <div class="chips" id="chips"></div>
+
+      <div class="gridwrap">
+        <table id="grid">
+          <thead><tr class="head" id="headRow"></tr></thead>
+          <tbody id="body"></tbody>
+        </table>
+      </div>
+      <p class="note">Click a header to sort (Shift-click to add a second sort). Drag the right edge of a header to resize. Use 📌 in the column manager or header to freeze a column. Saved views remember filters, column order, visibility, pinning and sort — stored in your browser.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- seed data (from your exported CSVs) ---------- */
+const PROPS=[["The Edition","Auckland","Penthouse"],["Mapple Tree","Auckland","House"],["Coral View Villa","Acton","Villa"],["Starluxe villa","Austral","Villa"],["Sunshine Coast Premium Resort","Mangere","Resort"],["Alias vel de","Ahmamau","Penthouse"],["Royal villa","Acton","Lodge"],["Paradise Beach House","Auckland","House"],["Ocean View Luxury Villa","Albion","Apartment"],["Property 1","Auckland","Island"],["Mornington Peninsula Cottage","Red Hill","Countryside"],["Great Ocean Road House","Lorne","Oceanfront"],["Perth Swan River Apartment","South Perth","Waterfront"],["Golden Sands Villa","Palm Cove","Penthouse"],["Blue Mountains Cottage","Leura","Mountain"],["Auckland Waterfront Penthouse","Auckland","Penthouse"],["Mountain Breeze Chalet","Noosa Heads","Apartment"],["Byron Bay Beachfront House","Byron Bay","Beachfront"],["Melbourne CBD Apartment","Melbourne","City Apartment"],["Gold Coast Resort","Springbrook","Resort"],["Bondi Beach Luxury Villa","Bondi Beach","Beachfront"],["Coral View Villa","Acton","Villa"]];
+const GUESTS=["Customer Stayluxe","Dishita Dave","Admin User","Ronak Gadhiya","Sneha Shah"];
+const HOSTS=["Ronak Gadhiya","Host 123","Sneha Shah","Nayan Kumar","Nishit Thakkar","Mac mishel","Brian Flores"];
+const BS=["Confirmed","Completed","Pending","Cancelled"];
+const PS=["Paid","Partial","Refunded","Pending"];
+const NZ=["Auckland","Mangere","Albion"];
+const ROWS=[];
+const isoD=d=>d.toISOString().slice(0,10);
+const BASE=new Date(2026,5,18).getTime();
+PROPS.forEach((p,i)=>{
+  const nz=NZ.includes(p[1]);
+  const c=nz?"NZ$":(i%11===4?"$":(i%13===7?"£":"A$"));
+  const nights=2+(i*3%9);
+  const nightly=420+(i*97%980);
+  const sub=Math.round(nightly*nights+(i*53%400));
+  const rate=nz?0.15:0.10;
+  const gst=Math.round(sub*rate);
+  const cc=Math.round(sub*0.05);
+  const comm=Math.round(sub*0.21);
+  const payout=sub-comm-cc;
+  const ci=new Date(BASE+((i*13)%230)*86400000);
+  const co=new Date(ci.getTime()+nights*86400000);
+  ROWS.push({id:"BK-1782"+(473953-i*4137),guest:GUESTS[i%GUESTS.length],host:HOSTS[i%HOSTS.length],
+    property:p[0],loc:p[1],type:p[2],method:i%5===0?"BANK":"CARD",bs:BS[i%4],ps:PS[(i+2)%4],
+    cur:c,guests:1+(i%5),nights,checkin:isoD(ci),checkout:isoD(co),sub,gst,cc,comm,payout,total:sub+gst+cc});
+});
+
+/* ---------- column model ---------- */
+const DEFCOLS=[
+ {key:"id",label:"Booking ID",type:"text",w:135,vis:true,pin:true},
+ {key:"guest",label:"Guest",type:"text",w:150,vis:true,pin:false},
+ {key:"host",label:"Host",type:"text",w:140,vis:true,pin:false},
+ {key:"property",label:"Property",type:"text",w:200,vis:true,pin:false},
+ {key:"loc",label:"Location",type:"enum",w:120,vis:true,pin:false},
+ {key:"checkin",label:"Check-in",type:"date",w:120,vis:true,pin:false},
+ {key:"checkout",label:"Check-out",type:"date",w:120,vis:true,pin:false},
+ {key:"type",label:"Type",type:"enum",w:120,vis:false,pin:false},
+ {key:"method",label:"Method",type:"enum",w:90,vis:true,pin:false},
+ {key:"bs",label:"Booking Status",type:"enum",w:135,vis:true,pin:false},
+ {key:"ps",label:"Payment Status",type:"enum",w:135,vis:true,pin:false},
+ {key:"cur",label:"Currency",type:"enum",w:90,vis:false,pin:false},
+ {key:"guests",label:"Guests",type:"num",w:80,vis:false,pin:false},
+ {key:"nights",label:"Nights",type:"num",w:80,vis:true,pin:false},
+ {key:"sub",label:"Subtotal (incl GST)",type:"money",w:150,vis:true,pin:false},
+ {key:"gst",label:"GST",type:"money",w:100,vis:true,pin:false},
+ {key:"cc",label:"CC Fee",type:"money",w:100,vis:false,pin:false},
+ {key:"comm",label:"Commission",type:"money",w:120,vis:true,pin:false},
+ {key:"payout",label:"Host Payout",type:"money",w:130,vis:true,pin:false},
+ {key:"total",label:"Total Paid",type:"money",w:130,vis:false,pin:false},
+];
+let COLS=clone(DEFCOLS);
+let sortBy=[];            // [{key,dir}]
+let filters={};           // key -> value
+let focusF=null,focusPos=0;
+function clone(o){return JSON.parse(JSON.stringify(o))}
+const colByKey=k=>COLS.find(c=>c.key===k);
+const pillBS={Confirmed:"p-green",Completed:"p-green",Pending:"p-amber",Cancelled:"p-red"};
+const pillPS={Paid:"p-green",Partial:"p-gray",Refunded:"p-red",Pending:"p-amber"};
+const distinct=k=>[...new Set(ROWS.map(r=>r[k]))].sort();
+const isNum=t=>t==="num"||t==="money";
+function fmt(r,c){
+  if(c.type==="money")return r.cur+r[c.key].toLocaleString();
+  if(c.type==="date")return fmtDate(r[c.key]);
+  return r[c.key];
+}
+function fmtDate(iso){if(!iso)return"";const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
+
+/* ---------- filtering ---------- */
+function numMatch(val,q){
+  q=q.trim();if(!q)return true;
+  let m;
+  if(m=q.match(/^(>=|<=|>|<)\s*([\d.]+)$/)){const n=+m[2];return m[1]===">"?val>n:m[1]==="<"?val<n:m[1]===">="?val>=n:val<=n;}
+  if(m=q.match(/^([\d.]+)\s*-\s*([\d.]+)$/))return val>=+m[1]&&val<=+m[2];
+  if(m=q.match(/^([\d.]+)$/))return val===+m[1];
+  return true;
+}
+function dateMatch(v,q){q=String(q).trim();if(!q)return true;
+  if(q.includes("~")){const a=q.split("~")[0],b=q.split("~")[1];if(a&&v<a)return false;if(b&&v>b)return false;return true;}
+  return String(v).includes(q);}
+function rowMatches(r){
+  const g=globalSearch.value.trim().toLowerCase();
+  if(g&&!COLS.some(c=>String(r[c.key]).toLowerCase().includes(g)))return false;
+  for(const c of COLS){
+    const f=filters[c.key];
+    if(f==null||f===""||(Array.isArray(f)&&f.length===0))continue;
+    if(Array.isArray(f)){if(!f.includes(r[c.key]))return false;}
+    else if(isNum(c.type)){if(!numMatch(r[c.key],f))return false;}
+    else if(c.type==="date"){if(!dateMatch(r[c.key],f))return false;}
+    else if(c.type==="enum"){if(r[c.key]!==f)return false;}
+    else{if(!String(r[c.key]).toLowerCase().includes(String(f).toLowerCase()))return false;}
+  }
+  return true;
+}
+function sortedRows(){
+  let rows=ROWS.filter(rowMatches);
+  if(sortBy.length){
+    rows=rows.slice().sort((a,b)=>{
+      for(const s of sortBy){const c=colByKey(s.key);let x=a[s.key],y=b[s.key];
+        if(!isNum(c.type)){x=String(x).toLowerCase();y=String(y).toLowerCase();}
+        if(x>y)return s.dir==="asc"?1:-1;if(x<y)return s.dir==="asc"?-1:1;}
+      return 0;});
+  }
+  return rows;
+}
+
+/* ---------- display order (pinned first) ---------- */
+function displayCols(){
+  const vis=COLS.filter(c=>c.vis);
+  return [...vis.filter(c=>c.pin),...vis.filter(c=>!c.pin)];
+}
+
+/* ---------- render ---------- */
+function render(){
+  const cols=displayCols();
+  const head=document.getElementById("headRow"),body=document.getElementById("body");
+  head.innerHTML="";
+  cols.forEach(c=>{
+    const s=sortBy.find(x=>x.key===c.key);
+    const ar=s?(s.dir==="asc"?"▲":"▼")+(sortBy.length>1?(sortBy.indexOf(s)+1):""):"↕";
+    const th=document.createElement("th");
+    th.style.width=c.w+"px";th.className=isNum(c.type)?"num":"";
+    th.innerHTML=`<div class="hd" data-k="${c.key}">
+      <span class="pin ${c.pin?'on':''}" title="Freeze column">📌</span>
+      <span class="lab">${c.label}</span><span class="srt">${ar}</span>
+      <span class="rsz"></span></div>`;
+    head.appendChild(th);
+  });
+  // body
+  const rows=sortedRows();
+  body.innerHTML=rows.map(r=>"<tr>"+cols.map(c=>{
+    let v=fmt(r,c),cls=isNum(c.type)?"num":"";
+    if(c.key==="bs")v=`<span class="pill ${pillBS[r.bs]}">${r.bs}</span>`;
+    else if(c.key==="ps")v=`<span class="pill ${pillPS[r.ps]}">${r.ps}</span>`;
+    else if(c.key==="loc")v=`<span class="link">${r.loc}</span>`;
+    else if(c.key==="id")v=`<b>${r.id}</b>`;
+    else if(c.type==="money")v=`<span style="${r[c.key]<0?'color:var(--red)':''}">${v}</span>`;
+    return `<td class="${cls}" data-k="${c.key}"><div class="cell">${v}</div></td>`;
+  }).join("")+"</tr>").join("");
+  applyPins(cols);
+  bindHeader();
+  document.getElementById("rowCount").textContent="Showing "+rows.length+" of "+ROWS.length+" rows";
+  document.getElementById("colCount").textContent=COLS.filter(c=>c.vis).length+"/"+COLS.length;
+  renderChips();
+  updateFBadge();
+}
+function colCells(key){
+  return [document.querySelector(`thead tr.head th .hd[data-k="${key}"]`)?.closest("th"),
+          ...document.querySelectorAll(`tbody td[data-k="${key}"]`)].filter(Boolean);
+}
+function applyPins(cols){
+  const pins=cols.filter(c=>c.pin);
+  cols.forEach(c=>{
+    const all=colCells(c.key);
+    all.forEach(el=>{el.classList.remove("pinned","pinlast");el.style.left="";});
+    if(c.pin){all.forEach(el=>el.classList.add("pinned"));if(c===pins[pins.length-1])all.forEach(el=>el.classList.add("pinlast"));}
+  });
+  let acc=0;
+  pins.forEach(c=>{colCells(c.key).forEach(el=>el.style.left=acc+"px");acc+=c.w;});
+}
+
+/* ---------- header: sort + resize + pin ---------- */
+function bindHeader(){
+  document.querySelectorAll(".hd").forEach(hd=>{
+    const k=hd.dataset.k;
+    hd.querySelector(".lab").onclick=e=>{toggleSort(k,e.shiftKey);};
+    hd.querySelector(".srt").onclick=e=>{toggleSort(k,e.shiftKey);};
+    hd.querySelector(".pin").onclick=e=>{e.stopPropagation();const c=colByKey(k);c.pin=!c.pin;render();};
+    const rsz=hd.querySelector(".rsz");
+    rsz.onmousedown=e=>{e.preventDefault();e.stopPropagation();startResize(k,e.clientX);};
+  });
+}
+function toggleSort(k,add){
+  const ex=sortBy.find(s=>s.key===k);
+  if(add){
+    if(ex){ex.dir=ex.dir==="asc"?"desc":null;if(!ex.dir)sortBy=sortBy.filter(s=>s!==ex);}
+    else sortBy.push({key:k,dir:"asc"});
+  }else{
+    if(ex&&ex.dir==="asc"&&sortBy.length===1)sortBy=[{key:k,dir:"desc"}];
+    else if(ex&&ex.dir==="desc"&&sortBy.length===1)sortBy=[];
+    else sortBy=[{key:k,dir:"asc"}];
+  }
+  render();
+}
+let rz=null;
+function startResize(k,x0){const c=colByKey(k);rz={k,x0,w0:c.w};document.body.style.cursor="col-resize";}
+window.addEventListener("mousemove",e=>{if(!rz)return;const c=colByKey(rz.k);c.w=Math.max(60,rz.w0+(e.clientX-rz.x0));
+  document.querySelectorAll(`th`).forEach(()=>{});render();});
+window.addEventListener("mouseup",()=>{if(rz){rz=null;document.body.style.cursor="";}});
+
+/* ---------- filters ---------- */
+function bindFilters(){
+  document.querySelectorAll("[data-f]").forEach(el=>{
+    el.oninput=()=>{focusF=el.dataset.f;focusPos=el.selectionStart||0;filters[el.dataset.f]=el.value;render();};
+    el.onchange=()=>{focusF=null;filters[el.dataset.f]=el.value;render();};
+  });
+}
+globalSearch.oninput=()=>render();
+function clearFilters(){filters={};globalSearch.value="";render();}
+function renderChips(){
+  const wrap=document.getElementById("chips");const items=[];
+  if(globalSearch.value)items.push(["Search",globalSearch.value,()=>{globalSearch.value="";render();}]);
+  Object.entries(filters).forEach(([k,v])=>{if(v&&(!Array.isArray(v)||v.length)){const disp=Array.isArray(v)?v.join(", "):v;items.push([colByKey(k).label,disp,()=>{delete filters[k];render();}]);}});
+  sortBy.forEach(s=>items.push(["Sort",colByKey(s.key).label+" "+(s.dir==="asc"?"↑":"↓"),()=>{sortBy=sortBy.filter(x=>x!==s);render();}]));
+  wrap.innerHTML=items.length?items.map((it,i)=>`<span class="chip"><b>${it[0]}:</b> ${it[1]} <span class="x" data-ci="${i}">✕</span></span>`).join(""):'<span class="count">No filters applied</span>';
+  wrap._acts=items.map(it=>it[2]);
+  wrap.querySelectorAll(".x").forEach(x=>x.onclick=()=>wrap._acts[+x.dataset.ci]());
+}
+
+/* ---------- column manager ---------- */
+function toggleColPop(e){e&&e.stopPropagation();const p=document.getElementById("colPop");document.getElementById("filterPop").classList.remove("show");p.classList.toggle("show");if(p.classList.contains("show"))renderColList();}
+document.addEventListener("click",e=>{if(!e.target.closest(".menuwrap")){document.getElementById("colPop").classList.remove("show");document.getElementById("filterPop").classList.remove("show");}});
+function renderColList(){
+  const q=(document.getElementById("colSearch").value||"").toLowerCase();
+  const list=document.getElementById("colList");
+  list.innerHTML=COLS.map((c,i)=>c.label.toLowerCase().includes(q)?
+    `<div class="colitem" draggable="true" data-i="${i}">
+       <span class="grip">⋮⋮</span>
+       <input type="checkbox" ${c.vis?"checked":""} data-vis="${i}">
+       <span class="nm">${c.label}</span>
+       <span class="pinbtn ${c.pin?'on':''}" data-pin="${i}" title="Freeze">📌</span>
+     </div>`:"").join("");
+  list.querySelectorAll("[data-vis]").forEach(cb=>cb.onchange=()=>{COLS[+cb.dataset.vis].vis=cb.checked;render();});
+  list.querySelectorAll("[data-pin]").forEach(b=>b.onclick=()=>{COLS[+b.dataset.pin].pin=!COLS[+b.dataset.pin].pin;renderColList();render();});
+  // drag reorder
+  let dragI=null;
+  list.querySelectorAll(".colitem").forEach(it=>{
+    it.ondragstart=()=>{dragI=+it.dataset.i;};
+    it.ondragover=e=>{e.preventDefault();it.classList.add("dragover");};
+    it.ondragleave=()=>it.classList.remove("dragover");
+    it.ondrop=e=>{e.preventDefault();it.classList.remove("dragover");const to=+it.dataset.i;
+      if(dragI!=null&&dragI!==to){const m=COLS.splice(dragI,1)[0];COLS.splice(to,0,m);renderColList();render();}};
+  });
+}
+function resetCols(){COLS=clone(DEFCOLS);renderColList();render();}
+
+/* ---------- Filters panel (left categories + multi-select options) ---------- */
+const FILTERCATS=[
+ {key:"bs",label:"Booking Status",type:"enum",dots:{Confirmed:"green",Completed:"green",Pending:"amber",Cancelled:"red"}},
+ {key:"ps",label:"Payment Status",type:"enum",dots:{Paid:"green",Partial:"gray",Refunded:"red",Pending:"amber"}},
+ {key:"checkin",label:"Check-in date",type:"daterange"},
+ {key:"checkout",label:"Check-out date",type:"daterange"},
+ {key:"method",label:"Payment Method",type:"enum"},
+ {key:"loc",label:"Location",type:"enum"},
+ {key:"type",label:"Property Type",type:"enum"},
+ {key:"cur",label:"Currency",type:"enum"},
+ {key:"host",label:"Host",type:"enum"},
+ {key:"sub",label:"Amount",type:"range"},
+ {key:"nights",label:"Nights",type:"range"},
+ {key:"guests",label:"Guests",type:"range"},
+];
+let panelCat="bs",draft={};
+function openPanelInit(){
+  draft={};
+  FILTERCATS.forEach(cat=>{
+    const f=filters[cat.key];
+    if(cat.type==="enum")draft[cat.key]=Array.isArray(f)?f.slice():(f?[f]:[]);
+    else if(cat.type==="daterange"){draft[cat.key]={from:"",to:""};
+      if(typeof f==="string"&&f.includes("~")){draft[cat.key]={from:f.split("~")[0]||"",to:f.split("~")[1]||""};}}
+    else{draft[cat.key]={min:"",max:""};
+      if(typeof f==="string"&&f){let m;
+        if(m=f.match(/^(\d+)-(\d+)$/)){draft[cat.key]={min:m[1],max:m[2]};}
+        else if(m=f.match(/^>=?(\d+)$/)){draft[cat.key].min=m[1];}
+        else if(m=f.match(/^<=?(\d+)$/)){draft[cat.key].max=m[1];}}}
+  });
+}
+function catCount(cat){if(cat.type==="enum")return (draft[cat.key]||[]).length;const r=draft[cat.key]||{};if(cat.type==="daterange")return (r.from||r.to)?1:0;return (r.min||r.max)?1:0;}
+function renderFilterPanel(){
+  const pop=document.getElementById("filterPop");
+  const cats=`<div class="fp-cats">`+FILTERCATS.map(c=>{const n=catCount(c);
+    return `<div class="fp-cat ${c.key===panelCat?'on':''}" data-cat="${c.key}">${c.label}${n?`<span class="fp-badge">${n}</span>`:""}</div>`;}).join("")+`</div>`;
+  const cat=FILTERCATS.find(c=>c.key===panelCat);
+  let opts="";
+  if(cat.type==="enum"){
+    opts=distinct(cat.key).map(v=>{const sel=(draft[cat.key]||[]).includes(v);
+      const dot=cat.dots&&cat.dots[v]?`<span class="fp-dot d-${cat.dots[v]}"></span>`:"";
+      return `<label class="fp-opt"><input type="checkbox" data-v="${v}" ${sel?'checked':''}>${dot}<span>${v}</span></label>`;}).join("");
+  }else if(cat.type==="daterange"){
+    const r=draft[cat.key]||{from:"",to:""};
+    opts=`<div class="fp-range"><label>From<input type="date" id="dtFrom" value="${r.from}"></label>
+          <label>To<input type="date" id="dtTo" value="${r.to}"></label></div>`;
+  }else{
+    const r=draft[cat.key]||{min:"",max:""};
+    opts=`<div class="fp-range"><label>Min<input type="number" id="rgMin" value="${r.min}"></label>
+          <label>Max<input type="number" id="rgMax" value="${r.max}"></label></div>`;
+  }
+  pop.innerHTML=`<div class="fp-body">${cats}<div class="fp-opts">${opts}</div></div>
+    <div class="fp-foot"><button class="btn" onclick="resetPanel()">Reset filters</button>
+    <button class="btn org" onclick="applyPanel()">Apply</button></div>`;
+  pop.querySelectorAll(".fp-cat").forEach(el=>el.onclick=()=>{panelCat=el.dataset.cat;renderFilterPanel();});
+  if(cat.type==="enum"){
+    pop.querySelectorAll(".fp-opt input").forEach(cb=>cb.onchange=()=>{
+      const arr=draft[cat.key]||[],v=cb.dataset.v;
+      if(cb.checked){if(!arr.includes(v))arr.push(v);}else{const i=arr.indexOf(v);if(i>=0)arr.splice(i,1);}
+      draft[cat.key]=arr;renderFilterPanel();});
+  }else if(cat.type==="daterange"){
+    const ff=pop.querySelector("#dtFrom"),tt=pop.querySelector("#dtTo");
+    [ff,tt].forEach(inp=>inp.oninput=()=>{draft[cat.key]={from:ff.value,to:tt.value};});
+  }else{
+    const mn=pop.querySelector("#rgMin"),mx=pop.querySelector("#rgMax");
+    [mn,mx].forEach(inp=>inp.oninput=()=>{draft[cat.key]={min:mn.value,max:mx.value};});
+  }
+}
+function toggleFilterPanel(e){e&&e.stopPropagation();const p=document.getElementById("filterPop");
+  document.getElementById("colPop").classList.remove("show");
+  const show=!p.classList.contains("show");p.classList.toggle("show",show);
+  if(show){openPanelInit();renderFilterPanel();}}
+function applyPanel(){
+  FILTERCATS.forEach(cat=>{
+    if(cat.type==="enum"){const arr=draft[cat.key]||[];if(arr.length)filters[cat.key]=arr.slice();else delete filters[cat.key];}
+    else if(cat.type==="daterange"){const r=draft[cat.key]||{};if(r.from||r.to)filters[cat.key]=(r.from||"")+"~"+(r.to||"");else delete filters[cat.key];}
+    else{const r=draft[cat.key]||{};let exp="";
+      if(r.min&&r.max)exp=r.min+"-"+r.max;else if(r.min)exp=">="+r.min;else if(r.max)exp="<="+r.max;
+      if(exp)filters[cat.key]=exp;else delete filters[cat.key];}
+  });
+  document.getElementById("filterPop").classList.remove("show");render();
+}
+function resetPanel(){draft={};FILTERCATS.forEach(c=>{if(c.type==="enum")draft[c.key]=[];else if(c.type==="daterange")draft[c.key]={from:"",to:""};else draft[c.key]={min:"",max:""};delete filters[c.key];});renderFilterPanel();render();}
+function updateFBadge(){let n=0;FILTERCATS.forEach(c=>{const f=filters[c.key];if(f&&(!Array.isArray(f)||f.length))n++;});
+  const b=document.getElementById("fCount");if(b){b.textContent=n||"";b.style.display=n?"inline-block":"none";}}
+
+/* ---------- saved views (persisted) ---------- */
+function getViews(){try{return JSON.parse(localStorage.getItem("sl_views")||"{}");}catch(_){return {};}}
+function setViews(v){try{localStorage.setItem("sl_views",JSON.stringify(v));}catch(_){}}
+function snapshot(){return{cols:clone(COLS),sortBy:clone(sortBy),filters:clone(filters),search:globalSearch.value};}
+function applyState(s){COLS=clone(s.cols);sortBy=clone(s.sortBy);filters=clone(s.filters);globalSearch.value=s.search||"";render();}
+function refreshViewSelect(sel){
+  const v=getViews();const s=document.getElementById("viewSelect");
+  s.innerHTML='<option value="">— Saved views —</option>'+Object.keys(v).map(n=>`<option ${n===sel?'selected':''}>${n}</option>`).join("");
+}
+function saveView(){const n=prompt("Name this view:");if(!n)return;const v=getViews();v[n]=snapshot();setViews(v);refreshViewSelect(n);}
+function deleteView(){const n=document.getElementById("viewSelect").value;if(!n)return;const v=getViews();delete v[n];setViews(v);refreshViewSelect();}
+document.getElementById("viewSelect").onchange=function(){const v=getViews();if(this.value&&v[this.value])applyState(v[this.value]);};
+
+/* ---------- seed default views first run ---------- */
+(function seed(){
+  const v=getViews();
+  if(!v["Finance view"]){
+    const fin=clone(DEFCOLS);fin.forEach(c=>c.vis=["id","guest","sub","gst","cc","comm","payout","total"].includes(c.key));
+    const fc=fin.find(c=>c.key==="id");fc.pin=true;
+    v["Finance view"]={cols:fin,sortBy:[{key:"sub",dir:"desc"}],filters:{},search:""};
+  }
+  if(!v["Operations view"]){
+    const ops=clone(DEFCOLS);ops.forEach(c=>c.vis=["id","guest","property","loc","checkin","checkout","bs","ps","nights"].includes(c.key));
+    v["Operations view"]={cols:ops,sortBy:[],filters:{bs:"Confirmed"},search:""};
+  }
+  setViews(v);
+})();
+["filterPop","colPop"].forEach(id=>document.getElementById(id).addEventListener("click",e=>e.stopPropagation()));
+refreshViewSelect();
+render();
+</script>
+</body>
+</html>
