@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stay Luxe — The Edition (Property &amp; Booking Mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1f2128;--muted:#6f7480;--bg:#f4f2ee;--card:#fff;--line:#e7e3dc;
+    --bronze:#7a4a1e;--bronze2:#9a5f25;--orange:#c9741f;--orange-d:#b3651a;
+    --green:#1f8a52;--greenbg:#e8f5ec;--charcoal:#2a2622;--cream:#f3ede3;--gold:#f2a93b;
+    --navy:#2f3b46;--blue:#2f5e8c;
+    --serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+  .hbar{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:var(--serif);font-size:26px;letter-spacing:8px;font-weight:600;color:var(--charcoal)}
+  .hbar .left,.hbar .right{display:flex;align-items:center;gap:14px;flex:1}
+  .hbar .right{justify-content:flex-end}
+  .menu{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:22px;padding:6px 10px;font-size:13px;color:var(--muted);cursor:pointer}
+  .pillbtn{border:1px solid var(--line);background:#fff;border-radius:22px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .ico{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+  .crumb{font-size:13px;color:var(--muted);padding:16px 0 4px}.crumb b{color:var(--ink);font-weight:500}
+  .gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;border-radius:16px;overflow:hidden;height:430px;margin-top:8px}
+  .gallery .g0{grid-row:1 / span 2}
+  .gallery .cell{position:relative;overflow:hidden;background:#e7e2da;cursor:pointer}
+  .gallery img{width:100%;height:100%;object-fit:cover}
+  .gallery .more{position:absolute;inset:0;background:rgba(20,16,12,.42);display:grid;place-items:center;color:#fff;font-family:var(--serif);font-size:26px;letter-spacing:1px}
+  .grid{display:grid;grid-template-columns:1fr 380px;gap:42px;align-items:start;padding:30px 0 40px}
+  .content section{padding:24px 0;border-bottom:1px solid var(--line)}
+  .content section:first-child{padding-top:6px;border-bottom:none}
+  h1{font-family:var(--serif);font-size:40px;font-weight:600;margin:0 0 6px;letter-spacing:.3px}
+  h2{font-family:var(--serif);font-size:24px;font-weight:600;margin:0 0 14px;color:#33414c}
+  .titlerow{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+  .loc{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:6px}
+  .sechead{display:flex;align-items:center;justify-content:space-between}
+  .seclink{font-size:13px;color:var(--blue);font-weight:600;cursor:pointer;text-decoration:underline}
+  .chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;color:var(--muted)}
+  .chip b{color:var(--ink)}
+  .desc{color:#3c3f47}.readmore{color:var(--bronze);font-weight:600;cursor:pointer;background:none;border:none;font-size:14px;padding:0;margin-top:6px}
+  .clist{display:grid;gap:14px}
+  .clist li,.amen div{display:flex;gap:11px;align-items:center;list-style:none;font-size:14px;color:#3c3f47}
+  ul{margin:0;padding:0}
+  .cc{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--cream);color:var(--bronze);border:1px solid #e7d9c5;display:grid;place-items:center;font-size:11px}
+  .amen{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 18px}
+  .bbrow{display:flex;gap:26px;font-size:15px}.bbrow span{display:flex;align-items:center;gap:9px}
+  .bedimgs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .bedimgs .cell{position:relative;border-radius:12px;overflow:hidden;height:210px;cursor:pointer}
+  .bedimgs img{width:100%;height:100%;object-fit:cover}
+  .bedimgs .more{position:absolute;inset:0;background:rgba(20,16,12,.42);display:grid;place-items:center;color:#fff;font-family:var(--serif);font-size:24px;text-align:center;line-height:1.1}
+  .mapbox{border-radius:16px;overflow:hidden;border:1px solid var(--line);height:340px;background:#eee}
+  .mapbox iframe{width:100%;height:100%;border:0;display:block}
+  .ga{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+  .ga h4{margin:0 0 12px;font-size:13px;color:#33414c}
+  .gacard{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:10px;font-size:14px;background:#fff}
+  .gacard .nm{color:var(--blue);font-weight:500}
+  .gacard .v{display:flex;align-items:center;gap:8px;color:var(--bronze);font-weight:600;font-size:13px}
+  .attr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .attr .card img{height:160px;width:100%;object-fit:cover;border-radius:12px}
+  .attr .card .n{font-size:14px;font-weight:600;margin:8px 2px 0}.attr .card .d{font-size:12px;color:var(--muted)}
+  .cancel-row{display:flex;gap:16px;align-items:flex-start}
+  .calicon{width:46px;height:52px;border:1px solid var(--line);border-radius:8px;text-align:center;flex-shrink:0;overflow:hidden}
+  .calicon .top{background:var(--orange);color:#fff;font-size:9px;padding:2px}
+  .calicon .day{font-size:22px;font-weight:700;padding:4px 0}
+  .cancel-row .flex{font-weight:700;color:var(--bronze);margin-bottom:8px}
+  .cancel-row ul{list-style:disc;padding-left:18px;color:#3c3f47;font-size:13.5px;display:grid;gap:6px}
+  .reviews-empty{color:var(--muted);font-size:14px;font-style:italic}
+
+  /* booking rail */
+  .rail{position:sticky;top:84px;align-self:start;display:flex;flex-direction:column;gap:16px}
+  .bcard{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 34px rgba(40,30,15,.10);padding:20px}
+  .bc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-height:48px}
+  #priceArea .addhint{font-size:18px;color:var(--ink);font-weight:500;padding-top:4px}
+  #priceArea .prow{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  #priceArea .was{color:var(--muted);text-decoration:line-through;font-size:15px}
+  #priceArea .now{font-size:24px;font-weight:700}#priceArea .now small{font-size:14px;font-weight:500;color:var(--muted)}
+  .memberbadge{display:inline-block;margin-top:6px;background:var(--cream);color:var(--bronze);border:1px solid #e7d9c5;border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:600}
+  .bc-icons{display:flex;gap:8px}.bc-icons .ico{width:32px;height:32px;font-size:14px}.bc-icons .ico.on{color:#d6455a;border-color:#f0c4cc;background:#fdeef0}
+  .pillrow{display:flex;gap:10px;margin:16px 0 4px}
+  .pillwrap{position:relative;flex:1}
+  .pill{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;cursor:pointer;display:flex;align-items:center;gap:9px;background:#fff;text-align:left}
+  .pill:hover{border-color:#c9bfae}.pill.active{border-color:var(--bronze);box-shadow:0 0 0 2px rgba(154,95,37,.15)}
+  .pill .val{font-size:14px;font-weight:600;color:var(--ink)}.pill .pi{color:var(--bronze)}
+  .breakdown{margin-top:16px;display:grid;gap:9px}
+  .bd{display:flex;justify-content:space-between;font-size:13.5px;color:#3c3f47}
+  .bd .lbl{display:flex;align-items:center;gap:8px}.bd.green{color:var(--green);font-weight:600}
+  .tag{font-size:10px;background:var(--greenbg);color:var(--green);border-radius:5px;padding:1px 6px;font-weight:700}
+  .bd .v{font-variant-numeric:tabular-nums}
+  .divline{height:1px;background:var(--line);margin:6px 0}
+  .total{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-top:2px}
+  .paytoday{background:var(--cream);border:1px solid #ece0cd;border-radius:10px;padding:10px 12px;font-size:12.5px;color:#5b4a32;margin-top:14px}.paytoday b{color:var(--bronze)}
+  .reserve{width:100%;margin-top:16px;background:var(--orange);color:#fff;border:none;border-radius:30px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.3px}
+  .reserve:hover{background:var(--orange-d)}
+  .nocharge{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
+  .askcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start}
+  .askcard .qi{width:42px;height:42px;border-radius:50%;background:var(--cream);color:var(--bronze);display:grid;place-items:center;flex-shrink:0;font-size:16px}
+  .askcard h4{margin:0 0 4px;font-size:15px}
+  .askcard p{margin:0 0 2px;font-size:13px;color:var(--muted)}
+  .askcard a{color:var(--bronze);font-weight:600;cursor:pointer}
+  .advisor{background:var(--charcoal);color:#fff;border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .advisor h4{margin:0 0 4px;font-size:16px;font-family:var(--serif);font-weight:600}
+  .advisor .em{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:8px 18px;font-weight:600;cursor:pointer;font-size:13px}
+  .advisor .face{width:60px;height:60px;border-radius:50%;background:#5b6168;display:grid;place-items:center;font-size:26px;flex-shrink:0}
+  .trust{display:flex;gap:10px;align-items:stretch;justify-content:center}
+  .trust .tb{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;text-align:center;font-size:11px;color:var(--muted)}
+  .trust .tb b{display:block;color:var(--ink);font-size:13px}
+  .trust .stars{color:#00b67a;letter-spacing:1px}
+  .trust .gstars{color:#fbbc04;letter-spacing:1px}
+
+  /* popovers */
+  .pop{position:absolute;left:0;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 44px rgba(30,20,10,.20);padding:16px;z-index:30;display:none}
+  .pop.show{display:block}
+  #calPop{width:min(700px,92vw);left:auto;right:0;padding:18px 22px}
+  #guestPop{width:min(540px,92vw);left:auto;right:0;padding:6px 22px 18px}
+  .calwrap{position:relative}
+  .cnav{position:absolute;top:-2px;border:none;background:none;font-size:24px;color:var(--ink);cursor:pointer;padding:0 6px;line-height:1;z-index:2}
+  .cnav.l{left:0}.cnav.r{right:0}
+  .cal-months{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:2px}
+  .cal-h{text-align:center;font-weight:600;margin-bottom:8px;font-family:var(--serif);font-size:18px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .cal-wd{font-size:10px;color:var(--muted);text-align:center;padding:4px 0;font-weight:600}
+  .cal-d{height:34px;display:grid;place-items:center;font-size:13px;border-radius:8px;cursor:pointer}
+  .cal-d:hover{background:var(--cream)}.cal-d.empty{cursor:default}.cal-d.empty:hover{background:none}
+  .cal-d.sel{background:var(--gold);color:#3a2a08;font-weight:700}
+  .cal-d.inrange{background:var(--cream)}
+  .cal-d.dis{color:#c9c9c9;cursor:default}.cal-d.dis:hover{background:none}
+  .cal-foot2{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:14px}
+  .cal-foot2 .hint{font-size:14px;color:var(--ink)}
+  .cal-foot2 .clr{background:none;border:none;text-decoration:underline;color:var(--bronze);font-weight:600;cursor:pointer;font-size:13px}
+  .closebtn{background:var(--gold);color:#3a2a08;border:none;border-radius:24px;padding:12px 30px;font-weight:700;cursor:pointer;font-size:14px}
+  .gfoot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding-top:16px;border-top:1px solid var(--line)}
+  .gfoot .cap{font-size:13px;color:var(--muted)}
+  .nopets{display:flex;align-items:center;gap:11px;padding:14px 2px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  .nopets .xc{width:24px;height:24px;border-radius:50%;background:var(--cream);display:grid;place-items:center;color:#8a8a8a;font-size:11px}
+  .gstep{display:flex;align-items:center;justify-content:space-between;padding:12px 2px}
+  .gstep .lbl b{font-size:14px}.gstep .lbl span{display:block;font-size:12px;color:var(--muted)}
+  .stepper{display:flex;align-items:center;gap:14px}
+  .stepper button{width:34px;height:34px;border-radius:50%;border:1px solid var(--gold);background:#fff;color:#b5781f;font-size:18px;cursor:pointer;line-height:1}
+  .stepper .n{min-width:18px;text-align:center;font-weight:600}
+
+  /* full-width sections */
+  .fw{padding:30px 0}
+  .exp{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .expcard{position:relative;border-radius:14px;overflow:hidden;height:250px;color:#fff;cursor:pointer}
+  .expcard img{width:100%;height:100%;object-fit:cover}
+  .expcard .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.6));display:flex;flex-direction:column;justify-content:flex-end;padding:22px}
+  .expcard .t{font-size:12px;opacity:.92}.expcard h3{font-family:var(--serif);font-size:28px;margin:6px 0 4px;color:#fff;font-weight:600}
+  .expcard .sub{font-size:13px;opacity:.92}.expcard .pr{font-size:14px;margin-top:6px;font-weight:600}
+  .explore{text-align:center;font-family:var(--serif);font-size:30px;color:#3a4658;margin:46px auto 26px;max-width:680px;line-height:1.25}
+  .homes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .home{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .home img{height:200px;width:100%;object-fit:cover}
+  .home .b{padding:14px 16px}
+  .home .nr{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .home .nm{font-weight:600;font-size:15px}.home .rt{font-size:13px;white-space:nowrap}
+  .home .meta{font-size:12px;color:var(--muted);margin:4px 0 8px}
+  .home .pf{display:flex;justify-content:space-between;align-items:center}
+  .home .price{font-size:13px}.home .price .was{text-decoration:line-through;color:var(--muted);font-size:11px;display:block}
+  .home .vd{border:1px solid var(--ink);background:#fff;border-radius:20px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer}
+
+  /* footer */
+  .foot{background:#414b54;color:#cfd6dc;margin-top:46px;padding:46px 0 24px}
+  .foot .logo2{font-family:var(--serif);font-size:30px;letter-spacing:10px;color:#fff;text-align:center;display:flex;align-items:center;justify-content:center;gap:14px}
+  .badges{display:flex;gap:16px;justify-content:center;margin:24px 0 18px}
+  .badge{width:58px;height:58px;border:1px solid rgba(255,255,255,.3);border-radius:10px;display:grid;place-items:center;font-size:9px;color:#cfd6dc;text-align:center;line-height:1.1}
+  .foot .ftrust{display:flex;gap:16px;justify-content:center;align-items:center;font-size:12px;color:#cfd6dc;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:26px}
+  .footcols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:920px;margin:30px auto 0}
+  .footcols h5{color:#fff;font-size:14px;margin:0 0 12px;font-weight:600}
+  .footcols a{display:block;color:#9fb4c4;font-size:13px;margin-bottom:9px;text-decoration:none;cursor:pointer}
+  .footcols a:hover{color:#fff}
+  .social{display:flex;gap:12px;font-size:16px;margin-bottom:14px}
+  .advline{font-size:12px;color:#cfd6dc}.advline b{color:var(--gold);display:block;font-size:15px;margin-top:3px}
+  .footbottom{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:18px;display:flex;justify-content:space-between;font-size:12px;color:#9aa4ac;flex-wrap:wrap;gap:8px}
+  .footbottom a{color:#9aa4ac;text-decoration:none;margin-left:16px}
+
+  .overlay{position:fixed;inset:0;background:rgba(20,15,8,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .overlay.show{display:flex}
+  .modal{background:#fff;border-radius:18px;max-width:440px;width:100%;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .modal h3{font-family:var(--serif);font-size:24px;margin:0 0 4px}.modal .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .modal .mrow{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .modal .mtot{display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding-top:12px}
+  .modal .mbtn{width:100%;margin-top:18px;background:linear-gradient(135deg,var(--orange),var(--bronze2));color:#fff;border:none;border-radius:12px;padding:14px;font-weight:700;cursor:pointer;font-size:15px}
+  .modal .close{float:right;cursor:pointer;color:var(--muted);font-size:20px;line-height:1}
+  .success{text-align:center;padding:8px 0}.success .tick{width:64px;height:64px;border-radius:50%;background:var(--greenbg);color:var(--green);display:grid;place-items:center;font-size:32px;margin:0 auto 14px}
+
+  .mbar{display:none}
+  @media(max-width:920px){
+    .grid{grid-template-columns:1fr;gap:24px}.rail{position:static;padding-bottom:74px}
+    .gallery{grid-template-columns:1fr 1fr;height:auto;grid-auto-rows:140px}.gallery .g0{grid-row:auto;grid-column:1 / span 2;height:220px}
+    .amen,.attr,.bedimgs,.ga,.exp,.homes,.footcols{grid-template-columns:1fr 1fr}.cal-months{grid-template-columns:1fr}h1{font-size:30px}
+    .mbar{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px;align-items:center;justify-content:space-between;z-index:50;box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+    .mbar .p b{font-size:18px}.mbar .p span{font-size:12px;color:var(--muted)}
+    .mbar button{background:linear-gradient(135deg,var(--orange),var(--bronze2));color:#fff;border:none;border-radius:10px;padding:13px 26px;font-weight:700}
+  }
+  @media(max-width:560px){.amen,.attr,.bedimgs,.ga,.exp,.homes,.footcols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hbar">
+    <div class="left"><div class="menu">☰ Menu</div></div>
+    <div class="logo">STAY LUXE</div>
+    <div class="right"><span class="pillbtn">Become a Host</span><span class="pillbtn">NZD ▾</span><span class="ico">☰</span><span class="ico">👤</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="crumb">Home <span>›</span> Search <span>›</span> <b>Property Details</b></div>
+  <div class="gallery">
+    <div class="cell g0"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/703927d9-a92f-406c-80db-20f036dd3b78/c63ffe5f-68ef-4008-9a76-bd837a6cf59a..jpg?w=900&fit=min" alt=""></div>
+    <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/2f364fb7-a1a7-4e67-817e-cdfcdd5719f7..jpg?w=520&fit=min" alt=""></div>
+    <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/db1df5d0-b6fe-46b1-b1ba-26f0df819bd8..jpg?w=520&fit=min" alt=""></div>
+    <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/bed5c715-087c-4824-9235-e4ced76ce5b0..jpg?rect=523,25,3774,3774&w=520&fit=min" alt=""></div>
+    <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/703927d9-a92f-406c-80db-20f036dd3b78/c63ffe5f-68ef-4008-9a76-bd837a6cf59a..jpg?w=520&fit=min" alt=""><div class="more">View 15 photos</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="content">
+      <section>
+        <div class="titlerow">
+          <div><h1>The Edition</h1><div class="loc">📍 Auckland, Auckland Region (AUK), New Zealand</div></div>
+          <div class="bc-icons"><span class="ico">♡</span><span class="ico">↗</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Property Information</h2>
+        <div class="chips">
+          <span class="chip">Property type: <b>Penthouse</b></span>
+          <span class="chip">Bedrooms <b>2</b></span>
+          <span class="chip">Baths <b>2</b></span>
+          <span class="chip">Size <b>50 sqft</b></span>
+          <span class="chip">Guests <b>8</b></span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Description</h2>
+        <p class="desc" id="desc">Stepping inside, you'll be captivated by the seamless fusion of contemporary design elements with timeless sophistication. Every detail, from the sleek lines to the exquisite finishes, reflects a commitment to craftsmanship.<span id="more" style="display:none"> Expansive windows frame uninterrupted harbour views, while the open-plan living and dining areas flow onto a private terrace. The chef's kitchen is fitted with premium appliances, and both bedrooms offer hotel-grade linens for a restful stay.</span></p>
+        <button class="readmore" id="rmBtn">Read more</button>
+      </section>
+
+      <section>
+        <h2>Home Truths</h2>
+        <ul class="clist">
+          <li><span class="cc">✓</span> This is a penthouse on the 6th floor</li>
+          <li><span class="cc">✓</span> Looks out of the Auckland Ports</li>
+          <li><span class="cc">✓</span> Close to all the cafe of Parnell Village</li>
+          <li><span class="cc">✓</span> 6 carparks</li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="sechead"><h2>Amenities</h2><span class="seclink">View More Amenities</span></div>
+        <div class="amen">
+          <div><span class="cc">✓</span> WiFi</div><div><span class="cc">✓</span> Air Conditioning</div><div><span class="cc">✓</span> Television</div>
+          <div><span class="cc">✓</span> Vacuum Cleaner</div><div><span class="cc">✓</span> Towels</div><div><span class="cc">✓</span> Outdoor Seating</div>
+          <div><span class="cc">✓</span> study room</div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sechead"><h2>Bedrooms &amp; bathrooms</h2><span class="seclink">Show Configuration</span></div>
+        <div class="bbrow"><span>🛏 2 Bedroom</span><span>🛁 2 bathroom</span></div>
+      </section>
+
+      <section>
+        <h2>Bedroom Images</h2>
+        <div class="bedimgs">
+          <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/2f364fb7-a1a7-4e67-817e-cdfcdd5719f7..jpg?w=520&fit=min" alt=""></div>
+          <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/db1df5d0-b6fe-46b1-b1ba-26f0df819bd8..jpg?w=520&fit=min" alt=""></div>
+          <div class="cell"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/bed5c715-087c-4824-9235-e4ced76ce5b0..jpg?rect=523,25,3774,3774&w=520&fit=min" alt=""><div class="more">View 8<br>Photos</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Local guide</h2>
+        <div style="font-weight:600;margin-bottom:6px">About Auckland</div>
+        <p class="desc" id="guide">Located in the prestigious suburb of Parnell, The Edition offers the perfect balance of urban convenience and suburban charm. Beyond the sanctuary of your apartment, the charm of Parnell beckons. Explore tree lined streets adorned with boutique shops,<span id="gmore" style="display:none"> award-winning restaurants and art galleries. The waterfront, museum and Auckland Domain are all just moments away, making it an ideal base for exploring the city.</span></p>
+        <button class="readmore" id="gBtn">Read more</button>
+      </section>
+
+      <section>
+        <h2>Location and Neighbourhood Attraction on Map</h2>
+        <div class="mapbox">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=174.7660%2C-36.8700%2C174.7980%2C-36.8470&layer=mapnik&marker=-36.8585%2C174.7813"></iframe>
+        </div>
+        <div class="loc" style="margin-top:8px">📍 Parnell, Auckland 1052, New Zealand</div>
+      </section>
+
+      <section>
+        <div class="ga">
+          <div>
+            <h4>Getting Around</h4>
+            <div class="gacard"><span class="nm">City Transport Access</span><span class="v">2 🚌</span></div>
+            <div class="gacard"><span class="nm">Museum</span><span class="v">1 🏛</span></div>
+            <div class="gacard"><span class="nm">Metro</span><span class="v">3 🚇</span></div>
+          </div>
+          <div>
+            <h4>Local Essentials</h4>
+            <div class="gacard"><span class="nm">Airport</span><span class="v">20 ✈</span></div>
+            <div class="gacard"><span class="nm">Railway station</span><span class="v">3 🚆</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Local Attractions</h2>
+        <div class="attr">
+          <div class="card"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/db1df5d0-b6fe-46b1-b1ba-26f0df819bd8..jpg?w=480&fit=min" alt=""><div class="n">Parnell Rose Gardens</div><div class="d">1 km</div></div>
+          <div class="card"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/cfbee10c-6e6c-431c-b66b-1e3daf50cf8f/2f364fb7-a1a7-4e67-817e-cdfcdd5719f7..jpg?w=480&fit=min" alt=""><div class="n">Auckland Museum</div><div class="d">1 km</div></div>
+          <div class="card"><img referrerpolicy="no-referrer" src="https://i.plumcache.com/listings/703927d9-a92f-406c-80db-20f036dd3b78/c63ffe5f-68ef-4008-9a76-bd837a6cf59a..jpg?w=480&fit=min" alt=""><div class="n">Auckland Ferry Terminal</div><div class="d">1 km</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Booking policies</h2>
+        <div class="ga">
+          <div><h4>Home Rules</h4>
+            <ul class="clist">
+              <li><span class="cc">✓</span> Children welcome (1–12 years)</li>
+              <li><span class="cc">✓</span> Infants welcome (under 12 months)</li>
+              <li><span class="cc">✓</span> No parties or events</li>
+              <li><span class="cc">✓</span> Pets Welcome</li>
+              <li><span class="cc">✓</span> No smoking</li>
+            </ul></div>
+          <div><h4>Good to Know</h4>
+            <ul class="clist">
+              <li><span class="cc">✓</span> Arrival from 15:00</li>
+              <li><span class="cc">✓</span> Departure before 10:00</li>
+              <li><span class="cc">✓</span> Air Conditioning</li>
+              <li><span class="cc">✓</span> WiFi</li>
+            </ul></div>
+        </div>
+      </section>
+
+      <section>
+        <h2 style="font-size:18px;font-family:var(--sans);font-weight:600">Cancellation Policy</h2>
+        <div class="cancel-row">
+          <div class="calicon"><div class="top">CANCEL</div><div class="day">24</div></div>
+          <div>
+            <div class="flex">Flexible 30</div>
+            <ul>
+              <li>Full refund of the accommodation amount if cancelled more than 30 days before check-in.</li>
+              <li>No refund of the accommodation amount if cancelled 30 days or less before check-in.</li>
+              <li>The Stay Luxe processing/service fee is non-refundable in all circumstances.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section style="border-bottom:none">
+        <h2 style="font-size:20px;font-family:var(--sans);font-weight:600">Guest Reviews (0)</h2>
+        <p class="reviews-empty">No reviews yet for this property.</p>
+      </section>
+    </div>
+
+    <!-- BOOKING RAIL -->
+    <aside class="rail">
+      <div class="bcard">
+        <div class="bc-top">
+          <div id="priceArea"></div>
+          <div class="bc-icons"><span class="ico" id="shareBtn">↗</span><span class="ico" id="heartBtn">♡</span></div>
+        </div>
+        <div class="pillrow">
+          <div class="pillwrap">
+            <button class="pill" id="dateBtn"><span class="pi">📅</span><span class="val" id="dateLabel">Select dates</span></button>
+            <div class="pop" id="calPop">
+              <div class="calwrap"><button class="cnav l" id="calPrev">‹</button><button class="cnav r" id="calNext">›</button><div class="cal-months" id="calMonths"></div></div>
+              <div class="cal-foot2"><span class="hint" id="calRange"></span><button class="clr" id="calClear">Clear dates</button></div>
+            </div>
+          </div>
+          <div class="pillwrap">
+            <button class="pill" id="guestBtn"><span class="pi">👤</span><span class="val" id="guestLabel">Add guests</span></button>
+            <div class="pop" id="guestPop">
+              <div class="gstep"><div class="lbl"><b>Adults</b><span>Age 13+</span></div>
+                <div class="stepper"><button data-g="adults" data-d="-1">−</button><span class="n" id="adN">1</span><button data-g="adults" data-d="1">+</button></div></div>
+              <div class="gstep" style="border-top:1px solid var(--line)"><div class="lbl"><b>Children</b><span>Age 1 to 12</span></div>
+                <div class="stepper"><button data-g="children" data-d="-1">−</button><span class="n" id="chN">0</span><button data-g="children" data-d="1">+</button></div></div>
+              <div class="gstep" style="border-top:1px solid var(--line)"><div class="lbl"><b>Infants</b><span>Under 1</span></div>
+                <div class="stepper"><button data-g="infants" data-d="-1">−</button><span class="n" id="inN">0</span><button data-g="infants" data-d="1">+</button></div></div>
+              <div class="nopets"><span class="xc">✕</span> No pets</div>
+              <div class="gfoot"><span class="cap">Add up to 6 guests (not including infants)</span><button class="closebtn" id="guestOk">Close</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="breakdown" id="breakdown" style="display:none"></div>
+        <div class="paytoday" id="payToday" style="display:none"></div>
+        <button class="reserve" id="ctaBtn">Check availability</button>
+        <div class="nocharge">You won't be charged yet</div>
+      </div>
+
+      <div class="askcard">
+        <div class="qi">💬</div>
+        <div><h4>Ask the host anything</h4><p>Questions about this home or the local area?</p><a id="msgHost">Enquire now ›</a></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- FULL-WIDTH SECTIONS -->
+<div class="wrap">
+  <div class="fw">
+    <div class="exp">
+      <div class="expcard"><img referrerpolicy="no-referrer" src="https://picsum.photos/seed/spa1/800/500" alt=""><div class="ov"><div class="t">Optional Experiences</div><h3>Early Check-in</h3><div class="sub">Instead of checking in at 3pm enjoy an early 12pm check-in</div><div class="pr">NZ$175.00 / 3</div></div></div>
+      <div class="expcard"><img referrerpolicy="no-referrer" src="https://picsum.photos/seed/spa2/800/500" alt=""><div class="ov"><div class="t">Optional Experiences</div><h3>Late Check-Out</h3><div class="sub">Instead of checking out at 10am, enjoy a 1pm late check-out</div><div class="pr">NZ$175.00 / 3</div></div></div>
+    </div>
+
+    <div class="explore">Explore a variety of homes that share similar features and styles, perfect for your next move!</div>
+
+    <div class="homes">
+      <div class="home"><img referrerpolicy="no-referrer" src="https://picsum.photos/seed/bondi/600/400" alt="">
+        <div class="b"><div class="nr"><span class="nm">Bondi Beach Luxury Villa</span><span class="rt">★ 5.0/5</span></div>
+          <div class="meta">A contemporary masterpiece just 50 metres… · 1 Bedrooms · 1 Bathrooms</div>
+          <div class="pf"><div class="price"><span class="was">NZ$135.00</span>From NZ$122.18 night</div><button class="vd">View Details</button></div></div></div>
+      <div class="home"><img referrerpolicy="no-referrer" src="https://picsum.photos/seed/resort/600/400" alt="">
+        <div class="b"><div class="nr"><span class="nm">Sunshine Coast Premium Resort</span><span class="rt">★ 3.1/5</span></div>
+          <div class="meta">Experience luxury and comfort at this be… · 2 Bedrooms · 3 Bathrooms</div>
+          <div class="pf"><div class="price"><span class="was">NZ$7,800.00</span>From NZ$7,016.02 night</div><button class="vd">View Details</button></div></div></div>
+      <div class="home"><img referrerpolicy="no-referrer" src="https://picsum.photos/seed/mansion/600/400" alt="">
+        <div class="b"><div class="nr"><span class="nm">Mapple Tree</span><span class="rt">★ 4.3/5</span></div>
+          <div class="meta">Beautiful villa featuring 5 bedrooms a… · 2 Bedrooms · 5 Bathrooms</div>
+          <div class="pf"><div class="price"><span class="was">NZ$1,500.00</span>From NZ$1,350.00 night</div><button class="vd">View Details</button></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="logo2">STAY <span style="font-size:20px">✦</span> LUXE</div>
+    <div class="badges"><div class="badge">AWARD<br>2026</div><div class="badge">AWARD<br>2026</div><div class="badge">AWARD<br>2026</div></div>
+    <div class="ftrust">
+      <span><span class="stars" style="color:#00b67a">★★★★★</span> 4.5 / 5 · 365 reviews · Trustpilot</span>
+      <span><span style="color:#fbbc04">★★★★★</span> 4.7 / 5 · 412 reviews · Google</span>
+    </div>
+    <div class="footcols">
+      <div><h5>Stay Luxe</h5><a>About Us</a><a>Our Story</a><a>The Luxe Standard</a><a>Contact Us</a></div>
+      <div><h5>Support</h5><a>FAQ</a><a>Help Centre</a><a>Cancellation Policies</a></div>
+      <div><h5>Partners</h5><a>Become a Host</a><a>Travel Agents</a></div>
+      <div><h5>Follow Us</h5><div class="social"><span>📷</span><span>📘</span><span>📌</span><span>▶</span><span>🎬</span></div>
+        <div class="advline">Speak to a Stay Advisor on<b>+64 21 234 5678</b></div></div>
+    </div>
+    <div class="footbottom">
+      <span>© 2026 Stay Luxe. All rights reserved.</span>
+      <span><a>Terms &amp; Condition</a><a>Privacy Policy</a><a>Cookie Policy</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="mbar"><div class="p" id="mbarPrice"><b>Add dates</b> <span>for price</span></div><button id="mbarBtn">Check availability</button></div>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script>
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MON3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WD=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const LIST=1200, MEMBER_RATE=0.15, CLEAN=875, PROC=0.0654;
+const state={ci:null,co:null,adults:1,children:0,infants:0,fav:false};
+const pad=n=>String(n).padStart(2,"0");
+const isoOf=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const TODAY=new Date();TODAY.setHours(0,0,0,0);const MINISO=isoOf(TODAY);
+let view=new Date();view.setDate(1);
+const $=id=>document.getElementById(id);
+const guests=()=>state.adults+state.children;
+const money=n=>"NZ$"+n.toLocaleString("en-NZ",{minimumFractionDigits:2,maximumFractionDigits:2});
+const short=s=>{const d=new Date(s+"T00:00");return d.getDate()+" "+MON3[d.getMonth()];};
+const nights=()=>state.ci&&state.co?Math.round((new Date(state.co)-new Date(state.ci))/864e5):0;
+
+function calc(){
+  const n=nights();
+  const accommodation=n*LIST;
+  const member=accommodation*MEMBER_RATE;
+  const monthly=n>=28?(accommodation-member)*0.10:0;
+  const afterDisc=accommodation-member-monthly+CLEAN;
+  const process=afterDisc*PROC;
+  const total=afterDisc+process;
+  return {n,accommodation,member,monthly,process,total,today:total*0.30};
+}
+function renderCard(){
+  const has=state.ci&&state.co;
+  $("dateLabel").textContent=has?`${short(state.ci)} – ${short(state.co)}`:"Select dates";
+  let glbl=guests()===0?"Add guests":guests()+(guests()===1?" guest":" guests");if(state.infants)glbl+=", "+state.infants+(state.infants===1?" infant":" infants");
+  $("guestLabel").textContent=glbl;
+  $("adN").textContent=state.adults;$("chN").textContent=state.children;$("inN").textContent=state.infants;
+  if(!has){
+    $("priceArea").innerHTML=`<div class="addhint">Add dates for price</div>`;
+    $("breakdown").style.display="none";$("payToday").style.display="none";
+    $("ctaBtn").textContent="Check availability";
+    $("mbarPrice").innerHTML=`<b>Add dates</b> <span>for price</span>`;$("mbarBtn").textContent="Check availability";
+    return;
+  }
+  const c=calc();
+  $("priceArea").innerHTML=`<div class="prow"><span class="was">${money(LIST)}</span><span class="now">${money(LIST*0.85)} <small>night</small></span></div>
+    <span class="memberbadge">15% off for members</span>`;
+  let rows=`<div class="bd"><span class="lbl">${money(LIST)} × ${c.n} nights</span><span class="v">${money(c.accommodation)}</span></div>
+    <div class="bd green"><span class="lbl">Member discount (15%)</span><span class="v">− ${money(c.member)}</span></div>`;
+  if(c.monthly>0)rows+=`<div class="bd green"><span class="lbl">Monthly discount (10%) <span class="tag">28+ nights</span></span><span class="v">− ${money(c.monthly)}</span></div>`;
+  rows+=`<div class="bd"><span class="lbl">Cleaning fee</span><span class="v">${money(CLEAN)}</span></div>
+    <div class="bd"><span class="lbl">Process fee</span><span class="v">${money(c.process)}</span></div>
+    <div class="divline"></div>
+    <div class="total"><span>Total Booking Value</span><span>${money(c.total)}</span></div>`;
+  $("breakdown").innerHTML=rows;$("breakdown").style.display="grid";
+  $("payToday").innerHTML=`Pay <b>${money(c.today)} today</b> to confirm — the balance is due closer to your stay.`;
+  $("payToday").style.display="block";
+  $("ctaBtn").textContent="Reserve — "+money(c.total);
+  $("mbarPrice").innerHTML=`<b>${money(c.total)}</b> <span>· ${c.n} nights</span>`;$("mbarBtn").textContent="Reserve";
+}
+function monthHTML(base){
+  const y=base.getFullYear(),m=base.getMonth();
+  const start=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+  let cells=WD.map(w=>`<div class="cal-wd">${w}</div>`).join("");
+  for(let i=0;i<start;i++)cells+=`<div class="cal-d empty"></div>`;
+  for(let d=1;d<=days;d++){
+    const s=`${y}-${pad(m+1)}-${pad(d)}`;
+    let cls="cal-d";
+    if(s<MINISO)cls+=" dis";
+    else if(s===state.ci||s===state.co)cls+=" sel";
+    else if(state.ci&&state.co&&s>state.ci&&s<state.co)cls+=" inrange";
+    cells+=s<MINISO?`<div class="${cls}">${d}</div>`:`<div class="${cls}" data-iso="${s}">${d}</div>`;
+  }
+  return `<div class="cal-month"><div class="cal-h">${MON[m]} ${y}</div><div class="cal-grid">${cells}</div></div>`;
+}
+function renderCal(){
+  const next=new Date(view.getFullYear(),view.getMonth()+1,1);
+  $("calMonths").innerHTML=monthHTML(view)+monthHTML(next);
+  $("calRange").textContent=!state.ci?"Select your dates":(!state.co?"Select check-out date":`Stay: ${short(state.ci)} – ${short(state.co)}`);
+  $("calMonths").querySelectorAll(".cal-d[data-iso]").forEach(el=>el.onclick=()=>{
+    const s=el.dataset.iso;
+    if(!state.ci||(state.ci&&state.co)){state.ci=s;state.co=null;}
+    else if(s>state.ci){state.co=s;}
+    else{state.ci=s;state.co=null;}
+    renderCal();renderCard();
+  });
+}
+function openPop(which){
+  closePops();
+  if(which==="cal"){$("calPop").classList.add("show");$("dateBtn").classList.add("active");renderCal();}
+  if(which==="guest"){$("guestPop").classList.add("show");$("guestBtn").classList.add("active");}
+}
+function closePops(){$("calPop").classList.remove("show");$("guestPop").classList.remove("show");$("dateBtn").classList.remove("active");$("guestBtn").classList.remove("active");}
+function openReserve(){
+  if(!(state.ci&&state.co)){openPop("cal");return;}
+  const c=calc();
+  $("modal").innerHTML=`<span class="close" id="mClose">✕</span>
+    <h3>Review your booking</h3><div class="sub">The Edition — Auckland Penthouse</div>
+    <div class="mrow"><span>Dates</span><span>${short(state.ci)} – ${short(state.co)} · ${c.n} nights</span></div>
+    <div class="mrow"><span>Guests</span><span>${guests()} ${guests()===1?"guest":"guests"}</span></div>
+    <div class="mrow"><span>Member price</span><span>${money(LIST*0.85)} / night</span></div>
+    <div class="mrow"><span>Due today</span><span>${money(c.today)}</span></div>
+    <div class="mtot"><span>Total Booking Value</span><span>${money(c.total)}</span></div>
+    <button class="mbtn" id="mConfirm">Confirm request to book</button>
+    <div class="nocharge" style="margin-top:10px">You won't be charged until the host accepts</div>`;
+  $("overlay").classList.add("show");
+  $("mClose").onclick=closeModal;$("mConfirm").onclick=showSuccess;
+}
+function showSuccess(){
+  $("modal").innerHTML=`<div class="success"><div class="tick">✓</div><h3>Request sent!</h3>
+    <p style="color:var(--muted);font-size:14px">Your booking request for <b>${short(state.ci)} – ${short(state.co)}</b> has been sent. You'll get a confirmation by email shortly.</p>
+    <button class="mbtn" id="mDone">Done</button></div>`;
+  $("mDone").onclick=closeModal;
+}
+function closeModal(){$("overlay").classList.remove("show");}
+
+$("dateBtn").onclick=e=>{e.stopPropagation();$("calPop").classList.contains("show")?closePops():openPop("cal");};
+$("guestBtn").onclick=e=>{e.stopPropagation();$("guestPop").classList.contains("show")?closePops():openPop("guest");};
+$("calPrev").onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);renderCal();};
+$("calNext").onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);renderCal();};
+$("calClear").onclick=()=>{state.ci=null;state.co=null;renderCal();renderCard();};
+$("guestOk").onclick=closePops;
+document.querySelectorAll(".stepper button").forEach(b=>b.onclick=()=>{
+  const g=b.dataset.g,d=+b.dataset.d;
+  if(g==="adults")state.adults=Math.max(1,state.adults+d);
+  else if(g==="children")state.children=Math.max(0,state.children+d);
+  else state.infants=Math.max(0,state.infants+d);
+  if(g!=="infants"&&state.adults+state.children>6){if(g==="adults")state.adults-=d;else state.children-=d;}
+  if(g==="infants"&&state.infants>5)state.infants-=d;
+  renderCard();
+});
+$("ctaBtn").onclick=openReserve;$("mbarBtn").onclick=openReserve;
+$("heartBtn").onclick=function(){state.fav=!state.fav;this.classList.toggle("on",state.fav);this.textContent=state.fav?"♥":"♡";};
+$("shareBtn").onclick=()=>alert("Share link copied to clipboard");
+$("msgHost").onclick=()=>alert("Opens a message thread with the host");
+$("rmBtn").onclick=function(){const m=$("more");const o=m.style.display==="none";m.style.display=o?"inline":"none";this.textContent=o?"Read less":"Read more";};
+$("gBtn").onclick=function(){const m=$("gmore");const o=m.style.display==="none";m.style.display=o?"inline":"none";this.textContent=o?"Read less":"Read more";};
+document.querySelectorAll(".pop").forEach(p=>p.addEventListener("click",e=>e.stopPropagation()));
+$("overlay").onclick=e=>{if(e.target===$("overlay"))closeModal();};
+document.addEventListener("click",closePops);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePops();closeModal();}});
+renderCard();
+</script>
+</body>
+</html>
