@@ -154,6 +154,10 @@
           <div class="pop" id="colPop">
             <h4>Manage columns</h4>
             <input class="psearch" id="colSearch" placeholder="Search columns…" oninput="renderColList()">
+            <div class="poprow" style="margin:0 0 8px 0">
+              <button class="btn" style="flex:1" onclick="setAllCols(true)">Select all</button>
+              <button class="btn" style="flex:1" onclick="setAllCols(false)">Clear all</button>
+            </div>
             <div class="collist" id="colList"></div>
             <div class="poprow">
               <button class="btn" style="flex:1" onclick="resetCols()">Reset</button>
@@ -414,6 +418,7 @@ function renderColList(){
   });
 }
 function resetCols(){COLS=clone(DEFCOLS);renderColList();render();}
+function setAllCols(v){COLS.forEach(c=>c.vis=v);renderColList();render();}
 
 /* ---------- Filters panel (left categories + multi-select options) ---------- */
 const FILTERCATS=[
@@ -425,10 +430,8 @@ const FILTERCATS=[
  {key:"loc",label:"Location",type:"enum"},
  {key:"type",label:"Property Type",type:"enum"},
  {key:"cur",label:"Currency",type:"enum"},
- {key:"host",label:"Host",type:"enum"},
  {key:"sub",label:"Amount",type:"range"},
  {key:"nights",label:"Nights",type:"range"},
- {key:"guests",label:"Guests",type:"range"},
 ];
 let panelCat="bs",draft={};
 function openPanelInit(){
