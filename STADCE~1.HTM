@@ -100,11 +100,10 @@
   .reserve{width:100%;margin-top:16px;background:var(--orange);color:#fff;border:none;border-radius:30px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.3px}
   .reserve:hover{background:var(--orange-d)}
   .nocharge{text-align:center;font-size:12px;color:var(--muted);margin-top:10px}
-  .askcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start}
-  .askcard .qi{width:42px;height:42px;border-radius:50%;background:var(--cream);color:var(--bronze);display:grid;place-items:center;flex-shrink:0;font-size:16px}
-  .askcard h4{margin:0 0 4px;font-size:15px}
-  .askcard p{margin:0 0 2px;font-size:13px;color:var(--muted)}
-  .askcard a{color:var(--bronze);font-weight:600;cursor:pointer}
+  .advisorcard{border-radius:16px;color:var(--ink);background:#fff;border:1px solid var(--line)}
+  .advisorcard .ov{padding:18px;display:flex;flex-direction:column;gap:6px}
+  .advisorcard h4{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);margin:0;line-height:1.2}
+  .advisorcard .sub{font-size:13px;color:var(--muted)}
   .advisor{background:var(--charcoal);color:#fff;border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
   .advisor h4{margin:0 0 4px;font-size:16px;font-family:var(--serif);font-weight:600}
   .advisor .em{background:#fff;color:var(--ink);border:none;border-radius:8px;padding:8px 18px;font-weight:600;cursor:pointer;font-size:13px}
@@ -399,9 +398,11 @@
         <div class="nocharge">You won't be charged yet</div>
       </div>
 
-      <div class="askcard">
-        <div class="qi">💬</div>
-        <div><h4>Ask the host anything</h4><p>Questions about this home or the local area?</p><a id="msgHost">Enquire now ›</a></div>
+      <div class="advisorcard">
+        <div class="ov">
+          <h4>Our Stay Advisors are Available 24/7</h4>
+          <div class="sub">Contact our dedicated team · +641234567</div>
+        </div>
       </div>
     </aside>
   </div>
@@ -481,7 +482,7 @@ function calc(){
   const accommodation=n*LIST;
   const member=accommodation*MEMBER_RATE;
   const monthly=n>=28?(accommodation-member)*0.10:0;
-  const afterDisc=accommodation-member-monthly+CLEAN;
+  const afterDisc=accommodation-member-monthly;
   const process=afterDisc*PROC;
   const total=afterDisc+process;
   return {n,accommodation,member,monthly,process,total,today:total*0.30};
@@ -505,8 +506,7 @@ function renderCard(){
   let rows=`<div class="bd"><span class="lbl">${money(LIST)} × ${c.n} nights</span><span class="v">${money(c.accommodation)}</span></div>
     <div class="bd green"><span class="lbl">Member discount (15%)</span><span class="v">− ${money(c.member)}</span></div>`;
   if(c.monthly>0)rows+=`<div class="bd green"><span class="lbl">Monthly discount (10%) <span class="tag">28+ nights</span></span><span class="v">− ${money(c.monthly)}</span></div>`;
-  rows+=`<div class="bd"><span class="lbl">Cleaning fee</span><span class="v">${money(CLEAN)}</span></div>
-    <div class="bd"><span class="lbl">Process fee</span><span class="v">${money(c.process)}</span></div>
+  rows+=`<div class="bd"><span class="lbl">Process fee</span><span class="v">${money(c.process)}</span></div>
     <div class="divline"></div>
     <div class="total"><span>Total Booking Value</span><span>${money(c.total)}</span></div>`;
   $("breakdown").innerHTML=rows;$("breakdown").style.display="grid";
@@ -589,7 +589,6 @@ document.querySelectorAll(".stepper button").forEach(b=>b.onclick=()=>{
 $("ctaBtn").onclick=openReserve;$("mbarBtn").onclick=openReserve;
 $("heartBtn").onclick=function(){state.fav=!state.fav;this.classList.toggle("on",state.fav);this.textContent=state.fav?"♥":"♡";};
 $("shareBtn").onclick=()=>alert("Share link copied to clipboard");
-$("msgHost").onclick=()=>alert("Opens a message thread with the host");
 $("rmBtn").onclick=function(){const m=$("more");const o=m.style.display==="none";m.style.display=o?"inline":"none";this.textContent=o?"Read less":"Read more";};
 $("gBtn").onclick=function(){const m=$("gmore");const o=m.style.display==="none";m.style.display=o?"inline":"none";this.textContent=o?"Read less":"Read more";};
 document.querySelectorAll(".pop").forEach(p=>p.addEventListener("click",e=>e.stopPropagation()));
