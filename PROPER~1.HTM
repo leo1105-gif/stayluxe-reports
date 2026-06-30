@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stay Luxe — Property Management (Collections Admin Mockup)</title>
+<style>
+  :root{
+    --orange:#E8821E;--orange-d:#cf7117;--ink:#20242e;--muted:#7b8493;--bg:#f4f5f7;
+    --card:#fff;--line:#e8eaef;--line2:#eef0f4;--sb:#0b0b0c;--sbtxt:#c2c7d2;
+    --green:#1a9d5a;--greenbg:#d6f0e0;--red:#d64550;--redbg:#fbdcdd;--amber:#c08a1e;
+    --amberbg:#fbeecb;--gray:#5f6675;--graybg:#e6e8ed;--blue:#3566c4;--tanicon:#edd9b8;--cream:#f3ede3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:13px;font-family:'Inter','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif}
+  .app{display:flex;min-height:100vh}
+  .side{width:182px;background:var(--sb);color:var(--sbtxt);flex-shrink:0;padding:14px 12px}
+  .brand{display:flex;justify-content:center;gap:6px;color:#fff;letter-spacing:3px;font-size:13px;font-weight:600;padding:8px 0 18px}
+  .brand .gem{color:var(--orange)}
+  .nav a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;color:var(--sbtxt);margin-bottom:1px;cursor:pointer;font-size:12px;font-weight:500}
+  .nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav a.active{background:var(--orange);color:#fff;font-weight:600}
+  .nav .ic{width:15px;text-align:center;opacity:.85}
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:13px 22px;display:flex;align-items:center;justify-content:space-between}
+  .topbar .wb{font-size:15px;font-weight:600}
+  .userpill{display:flex;align-items:center;gap:8px;background:#15171d;color:#fff;border-radius:22px;padding:4px 12px 4px 4px;font-size:12px;font-weight:600}
+  .ava{width:26px;height:26px;border-radius:50%;background:var(--orange);display:grid;place-items:center;font-size:11px}
+  .wrap{padding:18px 22px;display:flex;flex-direction:column;gap:16px}
+  .pghead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .pghead h1{margin:0;font-size:19px}
+  .tools{display:flex;gap:8px;align-items:center}
+  .search{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 11px;min-width:200px}
+  .search input{border:none;outline:none;font-size:13px;width:100%;background:transparent}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .btn:hover{border-color:#cfd4de}
+  .btn.org{background:var(--orange);border-color:var(--orange);color:#fff}
+  .btn.org:hover{background:var(--orange-d)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;justify-content:space-between}
+  .kpi .lbl{font-size:12.5px;color:var(--muted);font-weight:500}
+  .kpi .val{font-size:25px;font-weight:700;margin-top:9px}
+  .kpi .ico{width:40px;height:40px;border-radius:50%;background:var(--tanicon);display:grid;place-items:center;color:#8a6a2e}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .tab{padding:11px 16px;font-size:13px;color:var(--muted);cursor:pointer;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600}
+  .panel{display:none;flex-direction:column;gap:14px}
+  .panel.show{display:flex}
+  /* property table */
+  .tablewrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  thead th{background:#efe9dd;color:#6a6256;text-align:left;padding:11px 14px;font-size:11px;font-weight:700;white-space:nowrap}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--line2);vertical-align:top}
+  .pname{font-weight:600}.psub{font-size:11px;color:var(--muted)}
+  .pill{padding:4px 10px;border-radius:7px;font-size:11px;font-weight:600;display:inline-flex;gap:6px;align-items:center;border:1px solid transparent}
+  .p-green{background:var(--greenbg);color:var(--green)} .p-amber{background:var(--amberbg);color:var(--amber)}
+  .det{font-size:11.5px;color:#566;white-space:nowrap}
+  .acts{display:flex;gap:10px;color:var(--muted)}
+  .acts span{cursor:pointer}
+  .p-gray{background:var(--graybg);color:var(--gray)}
+  .flt{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .flt select{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;font-size:12px;cursor:pointer;font-weight:600;color:var(--ink)}
+  .msel{position:relative}
+  .mbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink)}
+  .mbtn:hover{border-color:#cfd4de}
+  .mbtn.on{border-color:var(--orange);color:var(--orange)}
+  .mpop{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(20,30,60,.16);padding:8px;z-index:30;display:none;min-width:190px;max-height:260px;overflow:auto}
+  .mpop.show{display:block}
+  .mopt{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;font-size:12.5px;cursor:pointer}
+  .mopt:hover{background:#f5f6f8}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-height:6px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:18px;padding:4px 10px;font-size:11px;display:inline-flex;gap:6px;align-items:center}
+  .chip .x{cursor:pointer;color:var(--muted)}
+  .count{font-size:12px;color:var(--muted)}
+  .fr{display:flex;gap:12px;align-items:center}
+  .fdel{cursor:pointer;color:var(--muted)} .fdel:hover{color:var(--red)}
+  .ftxt{cursor:pointer;flex:1}
+  /* collection editor */
+  .collbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .collbar .h{font-size:15px;font-weight:600}
+  .collbar .sub{font-size:12px;color:var(--muted)}
+  .ecard{display:flex;gap:14px;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;position:relative}
+  .ecard.dragover{border-color:var(--orange);box-shadow:0 0 0 2px rgba(232,130,30,.18)}
+  .grip{cursor:grab;color:#c2c2c2;display:flex;align-items:center;font-size:16px;padding:0 2px}
+  .ord{display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:center}
+  .ord button{width:26px;height:24px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:10px;color:var(--muted)}
+  .ord button:disabled{opacity:.3;cursor:default}
+  .ord .pos{font-size:13px;font-weight:700;color:var(--orange)}
+  .ethumb{width:120px;height:96px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#e7e2da}
+  .emain{flex:1;min-width:0}
+  .eloc{font-size:10.5px;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;display:flex;gap:8px;align-items:center}
+  .eloc .rt{color:var(--ink);font-weight:600}
+  .ename{font-size:16px;font-weight:600;margin:2px 0 4px}
+  .especs{font-size:12px;color:#566;margin-bottom:9px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .tg{background:#2a2622;color:#fff;border-radius:16px;padding:4px 9px 4px 11px;font-size:11px;display:inline-flex;align-items:center;gap:7px}
+  .tg .txt{cursor:pointer} .tg .x{cursor:pointer;opacity:.7;font-size:12px}
+  .tg .x:hover{opacity:1}
+  .addtag{display:inline-flex;align-items:center;gap:5px}
+  .addtag input{border:1px solid var(--line);border-radius:14px;padding:4px 10px;font-size:11px;width:120px;outline:none}
+  .addtag button{border:1px dashed var(--orange);color:var(--orange);background:#fff;border-radius:14px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600}
+  .addfeat{border:1px dashed var(--orange);color:var(--orange);background:#fff;border-radius:14px;padding:4px 11px;font-size:11px;cursor:pointer;font-weight:600}
+  .picksearch{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;margin:4px 0 10px;position:sticky;top:0}
+  .featnew{display:flex;gap:8px;margin-bottom:12px}
+  .featnew input{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;outline:none}
+  .featnew .add{border:1px solid var(--orange);background:var(--orange);color:#fff;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:600;cursor:pointer}
+  .featlbl{font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);font-weight:700;margin:2px 0 6px}
+  .featlist{max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+  .featitem{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line2);font-size:13px;cursor:pointer}
+  .featitem:last-child{border-bottom:none}
+  .featitem:hover{background:#faf7f1}
+  .featitem .pickadd{color:var(--orange);font-weight:600;font-size:12px}
+  .eright{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0}
+  .eprice{font-size:14px;font-weight:700}
+  .rm{border:1px solid var(--redbg);background:#fff;color:var(--red);border-radius:8px;padding:7px 12px;font-size:11.5px;font-weight:600;cursor:pointer}
+  .rm:hover{background:var(--redbg)}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:30px;text-align:center;color:var(--muted);font-size:13px}
+  .note{font-size:11px;color:var(--muted);font-style:italic}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(20,15,8,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .overlay.show{display:flex}
+  .modal{background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .modal .mh{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal .mh h3{margin:0;font-size:15px}
+  .modal .close{cursor:pointer;color:var(--muted);font-size:18px}
+  .modal .mb{padding:10px 18px;overflow:auto}
+  .pick{display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--line2)}
+  .pick img{width:54px;height:42px;border-radius:6px;object-fit:cover;background:#e7e2da}
+  .pick .nm{flex:1;font-size:13px}.pick .nm .l{font-size:11px;color:var(--muted)}
+  .pick .add{border:1px solid var(--orange);color:var(--orange);background:#fff;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer}
+  .pick .add:hover{background:var(--orange);color:#fff}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumb{width:100%;height:150px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">STAY <span class="gem">◆</span> LUXE</div>
+    <nav class="nav">
+      <a><span class="ic">▦</span> Dashboard</a>
+      <a><span class="ic">◑</span> Role Management</a>
+      <a><span class="ic">☷</span> Staff Management</a>
+      <a><span class="ic">☺</span> Customer Management</a>
+      <a><span class="ic">⌂</span> Host Management</a>
+      <a><span class="ic">▥</span> Property Category</a>
+      <a class="active"><span class="ic">▤</span> Property Management</a>
+      <a><span class="ic">◔</span> Notification</a>
+      <a><span class="ic">★</span> Review &amp; Rating</a>
+      <a><span class="ic">▣</span> Reports</a>
+      <a><span class="ic">◴</span> Bookings</a>
+      <a><span class="ic">$</span> Currency Management</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar"><div class="wb">Welcome back!</div><span class="userpill"><span class="ava">AU</span> Admin User ▾</span></div>
+
+    <div class="wrap">
+      <div class="pghead">
+        <h1>Properties Management</h1>
+        <div class="tools">
+          <button class="btn org">＋ Add New Property</button>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div><div class="lbl">Total Property</div><div class="val" id="kpiTotal">0</div></div><div class="ico">▥</div></div>
+        <div class="kpi"><div><div class="lbl">Active</div><div class="val" id="kpiActive">0</div></div><div class="ico" style="background:#d6f0e0;color:#1a9d5a">✓</div></div>
+        <div class="kpi"><div><div class="lbl">Pending</div><div class="val" id="kpiPending">0</div></div><div class="ico" style="background:#fbeecb;color:#c08a1e">◔</div></div>
+        <div class="kpi"><div><div class="lbl">Inactive</div><div class="val" id="kpiInactive">0</div></div><div class="ico" style="background:#eef0f4;color:#7b8493">⦸</div></div>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-t="pm">Property Management</div>
+        <div class="tab" data-t="exc">Exclusive Offers</div>
+        <div class="tab" data-t="hl">Highlighted Residences</div>
+      </div>
+
+      <!-- PROPERTY MANAGEMENT -->
+      <div class="panel show" id="p-pm">
+        <div class="flt">
+          <div class="msel"><button class="mbtn" id="btnCountry">Country ▾</button><div class="mpop" id="popCountry"></div></div>
+          <div class="msel"><button class="mbtn" id="btnCity">City ▾</button><div class="mpop" id="popCity"></div></div>
+          <div class="msel"><button class="mbtn" id="btnStatus">Status ▾</button><div class="mpop" id="popStatus"></div></div>
+          <div class="search" style="min-width:170px">🔍<input id="fSearch" placeholder="Search property…"></div>
+          <button class="btn" id="clearF">⌫ Clear</button>
+          <span class="count" id="pmCount" style="margin-left:auto"></span>
+        </div>
+        <div class="chips" id="pmChips"></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Property</th><th>Property ID</th><th>Type</th><th>Created</th><th>Location</th><th>Bookings</th><th>Status</th><th>Details</th><th>Actions</th></tr></thead>
+            <tbody id="pmBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EXCLUSIVE OFFERS -->
+      <div class="panel" id="p-exc">
+        <div class="collbar">
+          <div><div class="h">Exclusive Offers — home page section</div><div class="sub">Drag <b>⋮⋮</b> or use ▲▼ to set the order shown on the home page. Click a feature tag to edit, × to remove, or add a new one.</div></div>
+          <div style="display:flex;gap:8px"><button class="btn" onclick="openPicker('exc')">＋ Add property</button><button class="btn org" onclick="save('Exclusive Offers')">Save changes</button></div>
+        </div>
+        <div id="excList"></div>
+      </div>
+
+      <!-- HIGHLIGHTED RESIDENCES -->
+      <div class="panel" id="p-hl">
+        <div class="collbar">
+          <div><div class="h">Highlighted Residences — home page section</div><div class="sub">Drag <b>⋮⋮</b> or use ▲▼ to set the order. Click a feature tag to edit, × to remove, or add a new one.</div></div>
+          <div style="display:flex;gap:8px"><button class="btn" onclick="openPicker('hl')">＋ Add property</button><button class="btn org" onclick="save('Highlighted Residences')">Save changes</button></div>
+        </div>
+        <div id="hlList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal">
+  <div class="mh"><h3 id="pickTitle">Add property</h3><span class="close" onclick="closePicker()">✕</span></div>
+  <div class="mb" id="pickBody"></div>
+</div></div>
+
+<div class="overlay" id="fOverlay"><div class="modal">
+  <div class="mh"><h3 id="featTitle">Add feature</h3><span class="close" onclick="closeFeat()">✕</span></div>
+  <div class="mb">
+    <div class="featlbl">Create a new feature</div>
+    <div class="featnew"><input id="featNew" placeholder="e.g. Private chef, Late checkout…"><button class="add" id="featCreate">Create &amp; add</button></div>
+    <div class="featlbl">Or choose an existing feature</div>
+    <div class="featlist" id="featList"></div>
+  </div>
+  <div class="mh" style="border-top:1px solid var(--line);border-bottom:none;justify-content:flex-end"><button class="btn org" onclick="closeFeat()">Done</button></div>
+</div></div>
+
+<script>
+/* property catalogue */
+const PROPS={
+ paradise:{name:"Paradise Beach House",loc:"AUCKLAND | NEW ZEALAND",rating:"0.0",guests:25,beds:4,baths:2,sqm:2000,price:"NZ$17,687.47",img:"https://picsum.photos/seed/paradise/300/220"},
+ ocean:{name:"Ocean View Luxury Villa",loc:"ALBION | AUSTRALIA",rating:"4.3",guests:25,beds:11,baths:2,sqm:1000,price:"NZ$17,687.47",img:"https://picsum.photos/seed/oceanv/300/220"},
+ prop1:{name:"Property 1",loc:"AUCKLAND | NEW ZEALAND",rating:"5.0",guests:6,beds:1,baths:1,sqm:220,price:"NZ$23,399.93",img:"https://picsum.photos/seed/prop1/300/220"},
+ bondi:{name:"Bondi Beach Luxury Villa",loc:"BONDI BEACH | AUSTRALIA",rating:"5.0",guests:300,beds:1,baths:1,sqm:520,price:"NZ$122.04",img:"https://picsum.photos/seed/bondiv/300/220"},
+ mapple:{name:"Mapple Tree",loc:"AUCKLAND | NEW ZEALAND",rating:"4.3",guests:10,beds:2,baths:5,sqm:2300,price:"NZ$1,350.00",img:"https://picsum.photos/seed/mapple/300/220"},
+ coral:{name:"Coral View Villa",loc:"ACTON | AUSTRALIA",rating:"4.6",guests:8,beds:3,baths:3,sqm:750,price:"NZ$2,640.00",img:"https://picsum.photos/seed/coralv/300/220"},
+ sunshine:{name:"Sunshine Coast Premium Resort",loc:"MANGERE | NEW ZEALAND",rating:"3.1",guests:12,beds:2,baths:3,sqm:1000,price:"NZ$7,016.02",img:"https://picsum.photos/seed/sunres/300/220"},
+ starluxe:{name:"Starluxe villa",loc:"AUSTRAL | AUSTRALIA",rating:"4.0",guests:4,beds:1,baths:1,sqm:2300,price:"NZ$1,920.00",img:"https://picsum.photos/seed/starv/300/220"},
+ edition:{name:"The Edition",loc:"AUCKLAND | NEW ZEALAND",rating:"4.8",guests:8,beds:2,baths:2,sqm:50,price:"NZ$1,020.00",img:"https://picsum.photos/seed/edition/300/220"}
+};
+let COLL={
+ exc:[
+   {id:"paradise",tags:["Free airport transfer","15% off for members","Butler service"]},
+   {id:"ocean",tags:["Free airport transfer","15% off for members","Champagne arrival"]},
+   {id:"prop1",tags:["Free airport transfer","15% off for members","Champagne arrival"]}
+ ],
+ hl:[
+   {id:"ocean",tags:["Free airport transfer","15% off for members","Champagne arrival"]},
+   {id:"prop1",tags:["Free airport transfer","15% off for members","Butler service"]},
+   {id:"bondi",tags:["Free airport transfer","15% off for members"]}
+ ]
+};
+const $=id=>document.getElementById(id);
+
+/* ---- tabs ---- */
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===t));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
+  $("p-"+t.dataset.t).classList.add("show");
+});
+
+/* ---- property inventory + report-style filters ---- */
+const INV=[
+ {name:"Dolorem aut voluptates et ut eos et",sub:"Country State",pid:"Commodonisiundeilloesse",type:"Penthouse",created:"Jun 30, 2026",country:"Australia",city:"Acton",bk:0,status:"Pending",det:"1 · 1 · 100 sq ft"},
+ {name:"The Limited Edition",sub:"2 Churton",pid:"EDU",type:"Apartment",created:"Jun 30, 2026",country:"Australia",city:"Clunes",bk:1,status:"Active",det:"4 · 4 · 333 sq ft"},
+ {name:"The Edition",sub:"3 Churton Ave",pid:"The",type:"Penthouse",created:"Jun 24, 2026",country:"New Zealand",city:"Auckland",bk:0,status:"Active",det:"2 · 2 · 50 sq ft"},
+ {name:"test",sub:"sfsdfsdf",pid:"test",type:"Penthouse",created:"Jun 23, 2026",country:"Australia",city:"Acton",bk:0,status:"Inactive",det:"1 · 2 · 6565 sq ft"},
+ {name:"Sunshine villa",sub:"ACT City",pid:"ABC_111",type:"Penthouse",created:"Jun 23, 2026",country:"Australia",city:"Acton",bk:7,status:"Inactive",det:"1 · 1 · 7 sq ft"},
+ {name:"Mapple Tree",sub:"wall street",pid:"Fil1",type:"House",created:"Jun 20, 2026",country:"New Zealand",city:"Auckland",bk:6,status:"Active",det:"2 · 5 · 2300 sq ft"},
+ {name:"NEW PROPERTY",sub:"125 Ocean View Drive",pid:"PRO_123",type:"House",created:"Jun 8, 2026",country:"Australia",city:"Acton",bk:14,status:"Inactive",det:"2 · 2 · 1000 sq ft"},
+ {name:"Coral View Villa",sub:"125 Ocean View Drive",pid:"CVV_001",type:"Villa",created:"Jun 4, 2026",country:"Australia",city:"Acton",bk:57,status:"Active",det:"3 · 3 · 750 sq ft"},
+ {name:"Starluxe villa",sub:"123 Maple Street",pid:"AA11AA11",type:"Villa",created:"May 29, 2026",country:"Australia",city:"Austral",bk:10,status:"Active",det:"1 · 1 · 2300 sq ft"},
+ {name:"Sunshine Coast Premium Resort",sub:"25 Harbour View St",pid:"AUS-PR-1001",type:"Resort",created:"May 27, 2026",country:"New Zealand",city:"Mangere",bk:17,status:"Active",det:"2 · 3 · 1000 sq ft"},
+ {name:"Paradise Beach House",sub:"45 Harbour View Rd",pid:"PROP-1779",type:"House",created:"May 22, 2026",country:"New Zealand",city:"Auckland",bk:9,status:"Active",det:"2 · 2 · 2000 sq ft"},
+ {name:"Ocean View Luxury Villa",sub:"24 Queen St",pid:"Ocean_001",type:"Apartment",created:"May 21, 2026",country:"Australia",city:"Albion",bk:12,status:"Active",det:"11 · 2 · 1000 sq ft"},
+ {name:"Property 1",sub:"Hamilton Island",pid:"PROP-1779b",type:"Island",created:"May 21, 2026",country:"New Zealand",city:"Auckland",bk:4,status:"Pending",det:"1 · 1 · 220 sq ft"},
+ {name:"Byron Bay Beachfront House",sub:"Byron Bay",pid:"PROP-1654",type:"Beachfront",created:"May 21, 2026",country:"Australia",city:"Byron Bay",bk:8,status:"Active",det:"4 · 3 · 1200 sq ft"},
+ {name:"Golden Sands Villa",sub:"Palm Cove",pid:"PROP-1712",type:"Penthouse",created:"May 21, 2026",country:"Australia",city:"Palm Cove",bk:5,status:"Active",det:"2 · 2 · 900 sq ft"},
+ {name:"Blue Mountains Cottage",sub:"Leura",pid:"PROP-1702",type:"Mountain",created:"May 21, 2026",country:"Australia",city:"Leura",bk:3,status:"Inactive",det:"2 · 1 · 700 sq ft"},
+ {name:"Bondi Beach Luxury Villa",sub:"Bondi Beach",pid:"PROP-1618",type:"Beachfront",created:"May 20, 2026",country:"Australia",city:"Bondi Beach",bk:11,status:"Active",det:"1 · 1 · 520 sq ft"},
+ {name:"Queenstown Alpine Lodge",sub:"Alpine Rd",pid:"QT-002",type:"Lodge",created:"May 18, 2026",country:"New Zealand",city:"Queenstown",bk:6,status:"Active",det:"3 · 2 · 1400 sq ft"},
+ {name:"Wellington Harbour Loft",sub:"Oriental Bay",pid:"WLG-010",type:"Apartment",created:"May 15, 2026",country:"New Zealand",city:"Wellington",bk:2,status:"Pending",det:"1 · 1 · 480 sq ft"},
+ {name:"Denarau Beach Villa",sub:"Denarau Island",pid:"FJ-001",type:"Villa",created:"May 12, 2026",country:"Fiji",city:"Denarau Island",bk:7,status:"Active",det:"3 · 3 · 1600 sq ft"},
+ {name:"Nadi Lagoon Suite",sub:"Wailoaloa",pid:"FJ-002",type:"Resort",created:"May 10, 2026",country:"Fiji",city:"Nadi",bk:4,status:"Pending",det:"2 · 2 · 1100 sq ft"},
+ {name:"Suva Garden Apartment",sub:"Suva CBD",pid:"FJ-003",type:"Apartment",created:"May 8, 2026",country:"Fiji",city:"Suva",bk:1,status:"Inactive",det:"1 · 1 · 600 sq ft"}
+];
+const spill=s=>s==="Active"?"p-green":(s==="Pending"?"p-amber":"p-gray");
+const COUNTRIES=["Australia","New Zealand","Fiji"], STATUSES=["Active","Pending","Inactive"];
+const selC=new Set(), selCity=new Set(), selSt=new Set();
+const cityOpts=()=>[...new Set(INV.filter(p=>!selC.size||selC.has(p.country)).map(p=>p.city))].sort();
+function buildPop(popId,opts,set,after){
+  const pop=$(popId);
+  pop.innerHTML=opts.length?opts.map(o=>`<label class="mopt"><input type="checkbox" value="${o}" ${set.has(o)?'checked':''}> ${o}</label>`).join(""):`<div style="padding:8px;color:var(--muted);font-size:12px">No options</div>`;
+  pop.querySelectorAll("input").forEach(cb=>cb.onchange=()=>{cb.checked?set.add(cb.value):set.delete(cb.value);if(after)after();updateBtns();renderPM();});
+}
+function updateBtns(){
+  $("btnCountry").innerHTML="Country"+(selC.size?` (${selC.size})`:"")+" ▾";$("btnCountry").classList.toggle("on",selC.size>0);
+  $("btnCity").innerHTML="City"+(selCity.size?` (${selCity.size})`:"")+" ▾";$("btnCity").classList.toggle("on",selCity.size>0);
+  $("btnStatus").innerHTML="Status"+(selSt.size?` (${selSt.size})`:"")+" ▾";$("btnStatus").classList.toggle("on",selSt.size>0);
+}
+function rebuildCity(){const valid=new Set(cityOpts());[...selCity].forEach(c=>{if(!valid.has(c))selCity.delete(c);});buildPop("popCity",cityOpts(),selCity);}
+function removeSel(type,v){
+  if(type==="country"){selC.delete(v);buildPop("popCountry",COUNTRIES,selC,rebuildCity);rebuildCity();}
+  else if(type==="city"){selCity.delete(v);buildPop("popCity",cityOpts(),selCity);}
+  else if(type==="status"){selSt.delete(v);buildPop("popStatus",STATUSES,selSt);}
+  else{$("fSearch").value="";}
+  updateBtns();renderPM();
+}
+function renderPM(){
+  const q=($("fSearch").value||"").toLowerCase();
+  const rows=INV.filter(p=>(!selC.size||selC.has(p.country))&&(!selCity.size||selCity.has(p.city))&&(!selSt.size||selSt.has(p.status))&&(!q||(p.name+" "+p.pid+" "+p.city).toLowerCase().includes(q)));
+  $("kpiTotal").textContent=rows.length;
+  $("kpiActive").textContent=rows.filter(p=>p.status==="Active").length;
+  $("kpiPending").textContent=rows.filter(p=>p.status==="Pending").length;
+  $("kpiInactive").textContent=rows.filter(p=>p.status==="Inactive").length;
+  $("pmBody").innerHTML=rows.length?rows.map(p=>`<tr>
+    <td><div class="pname">${p.name}</div><div class="psub">${p.sub}</div></td>
+    <td>${p.pid}</td><td>${p.type}</td><td class="psub">${p.created}</td>
+    <td><span style="color:var(--blue)">${p.city}</span><div class="psub">${p.country}</div></td>
+    <td>${p.bk}</td><td><span class="pill ${spill(p.status)}">${p.status} ▾</span></td>
+    <td class="det">🛏 ${p.det}</td>
+    <td><div class="acts"><span title="View">👁</span><span title="Edit">✎</span><span title="Delete">🗑</span></div></td></tr>`).join("")
+    :`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px">No properties match these filters.</td></tr>`;
+  $("pmCount").textContent="Showing "+rows.length+" of "+INV.length+" properties";
+  const items=[];
+  selC.forEach(v=>items.push(["Country",v,()=>removeSel("country",v)]));
+  selCity.forEach(v=>items.push(["City",v,()=>removeSel("city",v)]));
+  selSt.forEach(v=>items.push(["Status",v,()=>removeSel("status",v)]));
+  if($("fSearch").value)items.push(["Search",$("fSearch").value,()=>removeSel("search")]);
+  const ch=$("pmChips");
+  ch.innerHTML=items.length?items.map((it,i)=>`<span class="chip"><b>${it[0]}:</b> ${it[1]} <span class="x" data-ci="${i}">✕</span></span>`).join(""):'<span class="count">No filters applied — pick any mix of countries, cities &amp; statuses</span>';
+  ch._acts=items.map(it=>it[2]); ch.querySelectorAll(".x").forEach(x=>x.onclick=()=>ch._acts[+x.dataset.ci]());
+}
+buildPop("popCountry",COUNTRIES,selC,rebuildCity);
+buildPop("popStatus",STATUSES,selSt);
+rebuildCity();updateBtns();
+[["btnCountry","popCountry"],["btnCity","popCity"],["btnStatus","popStatus"]].forEach(([b,p])=>{
+  $(b).onclick=e=>{e.stopPropagation();const el=$(p),open=el.classList.contains("show");document.querySelectorAll(".mpop").forEach(x=>x.classList.remove("show"));if(!open)el.classList.add("show");};
+});
+document.querySelectorAll(".mpop").forEach(p=>p.addEventListener("click",e=>e.stopPropagation()));
+document.addEventListener("click",()=>document.querySelectorAll(".mpop").forEach(x=>x.classList.remove("show")));
+$("fSearch").oninput=renderPM;
+$("clearF").onclick=()=>{selC.clear();selCity.clear();selSt.clear();$("fSearch").value="";buildPop("popCountry",COUNTRIES,selC,rebuildCity);buildPop("popStatus",STATUSES,selSt);rebuildCity();updateBtns();renderPM();};
+renderPM();
+
+/* ---- collection editor ---- */
+function specs(p){return `👤 ${p.guests} Guest · 🛏 ${p.beds} Bed · 🛁 ${p.baths} Bath · ${p.sqm} sqm`;}
+function renderColl(key){
+  const arr=COLL[key], box=$(key+"List");
+  if(!arr.length){box.innerHTML=`<div class="empty">No properties in this section yet. Click <b>＋ Add property</b> to feature one on the home page.</div>`;return;}
+  box.innerHTML=arr.map((it,i)=>{
+    const p=PROPS[it.id];
+    const tags=it.tags.map((t,ti)=>`<span class="tg"><span class="txt" data-edit="${i}-${ti}">${t}</span><span class="x" data-del="${i}-${ti}">×</span></span>`).join("");
+    return `<div class="ecard" draggable="true" data-i="${i}">
+      <div class="grip">⋮⋮</div>
+      <div class="ord"><button data-up="${i}" ${i===0?'disabled':''}>▲</button><div class="pos">${i+1}</div><button data-down="${i}" ${i===arr.length-1?'disabled':''}>▼</button></div>
+      <img class="ethumb" referrerpolicy="no-referrer" src="${p.img}" alt="">
+      <div class="emain">
+        <div class="eloc">${p.loc} <span class="rt">★ ${p.rating}/5</span></div>
+        <div class="ename">${p.name}</div>
+        <div class="especs">${specs(p)}</div>
+        <div class="tags">${tags}<button class="addfeat" data-feat="${i}">＋ Add feature</button></div>
+      </div>
+      <div class="eright"><div class="eprice">${p.price}</div><button class="rm" data-rm="${i}">Remove</button></div>
+    </div>`;
+  }).join("");
+  bind(key);
+}
+function bind(key){
+  const box=$(key+"List"), arr=COLL[key];
+  box.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{const i=+b.dataset.up;[arr[i-1],arr[i]]=[arr[i],arr[i-1]];renderColl(key);});
+  box.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{const i=+b.dataset.down;[arr[i+1],arr[i]]=[arr[i],arr[i+1]];renderColl(key);});
+  box.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{arr.splice(+b.dataset.rm,1);renderColl(key);});
+  box.querySelectorAll("[data-del]").forEach(s=>s.onclick=()=>{const[i,ti]=s.dataset.del.split("-").map(Number);arr[i].tags.splice(ti,1);renderColl(key);});
+  box.querySelectorAll("[data-edit]").forEach(s=>s.onclick=()=>{const[i,ti]=s.dataset.edit.split("-").map(Number);const v=prompt("Edit feature:",arr[i].tags[ti]);if(v!=null&&v.trim()){arr[i].tags[ti]=v.trim();libAdd(v.trim());renderColl(key);}});
+  box.querySelectorAll("[data-feat]").forEach(b=>b.onclick=()=>openFeat(key,+b.dataset.feat));
+  // drag reorder
+  let from=null;
+  box.querySelectorAll(".ecard").forEach(c=>{
+    c.ondragstart=()=>{from=+c.dataset.i;};
+    c.ondragover=e=>{e.preventDefault();c.classList.add("dragover");};
+    c.ondragleave=()=>c.classList.remove("dragover");
+    c.ondrop=e=>{e.preventDefault();c.classList.remove("dragover");const to=+c.dataset.i;if(from!=null&&from!==to){const m=arr.splice(from,1)[0];arr.splice(to,0,m);renderColl(key);}};
+  });
+}
+
+/* ---- add-property picker ---- */
+let pickKey=null;
+function openPicker(key){
+  pickKey=key;
+  $("pickTitle").textContent="Add property to "+(key==="exc"?"Exclusive Offers":"Highlighted Residences");
+  $("pickBody").innerHTML=`<input class="picksearch" id="pickSearch" placeholder="Search properties by name or location…"><div id="pickList"></div>`;
+  $("pickSearch").oninput=renderPickList;
+  renderPickList();
+  $("overlay").classList.add("show");$("pickSearch").focus();
+}
+function renderPickList(){
+  const q=($("pickSearch").value||"").toLowerCase();
+  const inColl=new Set(COLL[pickKey].map(x=>x.id));
+  const avail=Object.keys(PROPS).filter(id=>!inColl.has(id) && (PROPS[id].name+" "+PROPS[id].loc).toLowerCase().includes(q));
+  const box=$("pickList");
+  box.innerHTML=avail.length?avail.map(id=>{const p=PROPS[id];
+    return `<div class="pick"><img referrerpolicy="no-referrer" src="${p.img}"><div class="nm">${p.name}<div class="l">${p.loc} · ★ ${p.rating}/5</div></div><button class="add" data-pick="${id}">Add</button></div>`;}).join("")
+    :`<div class="empty" style="border:none">No matching properties.</div>`;
+  box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{COLL[pickKey].push({id:b.dataset.pick,tags:[]});renderColl(pickKey);renderPickList();});
+}
+function closePicker(){$("overlay").classList.remove("show");}
+$("overlay").onclick=e=>{if(e.target===$("overlay"))closePicker();};
+
+/* ---- feature library + add-feature popup ---- */
+let FEATURES=[];
+function seedFeatures(){
+  const s=new Set(["Free airport transfer","15% off for members","Butler service","Champagne arrival","Private chef","Late checkout","Welcome hamper","Daily housekeeping","Spa credit","Airport lounge access"]);
+  ["exc","hl"].forEach(k=>COLL[k].forEach(it=>it.tags.forEach(t=>s.add(t))));
+  FEATURES=[...s];
+}
+function libAdd(v){if(v && !FEATURES.includes(v))FEATURES.push(v);}
+let featTarget=null;
+function openFeat(key,i){featTarget={key,i};$("featTitle").textContent="Add feature to "+PROPS[COLL[key][i].id].name;$("featNew").value="";renderFeatList();$("fOverlay").classList.add("show");$("featNew").focus();}
+function renderFeatList(){
+  const {key,i}=featTarget, have=new Set(COLL[key][i].tags);
+  const list=FEATURES.filter(f=>!have.has(f)), box=$("featList");
+  box.innerHTML=list.length?list.map(f=>{const fi=FEATURES.indexOf(f);
+    return `<div class="featitem"><span class="ftxt" data-add="${fi}">${f}</span><span class="fr"><span class="pickadd" data-add="${fi}">＋ Add</span><span class="fdel" data-del="${fi}" title="Remove from library">🗑</span></span></div>`;}).join("")
+    :`<div class="empty" style="border:none">All saved features are already on this property — create a new one above.</div>`;
+  box.querySelectorAll("[data-add]").forEach(el=>el.onclick=()=>{COLL[key][i].tags.push(FEATURES[+el.dataset.add]);renderColl(key);renderFeatList();});
+  box.querySelectorAll("[data-del]").forEach(el=>el.onclick=e=>{e.stopPropagation();if(confirm("Remove \""+FEATURES[+el.dataset.del]+"\" from the feature library?")){FEATURES.splice(+el.dataset.del,1);renderFeatList();}});
+}
+function closeFeat(){$("fOverlay").classList.remove("show");}
+$("fOverlay").onclick=e=>{if(e.target===$("fOverlay"))closeFeat();};
+$("featCreate").onclick=()=>{const v=($("featNew").value||"").trim();if(!v)return;libAdd(v);const {key,i}=featTarget;if(!COLL[key][i].tags.includes(v))COLL[key][i].tags.push(v);$("featNew").value="";renderColl(key);renderFeatList();};
+$("featNew").onkeydown=e=>{if(e.key==="Enter")$("featCreate").onclick();};
+
+function save(name){alert("Saved "+name+" order & features.\\n(Production: PATCH /admin/api/home-sections/"+(name.includes('Exclusive')?'exclusive':'highlighted')+")");}
+
+seedFeatures();renderColl("exc");renderColl("hl");
+</script>
+</body>
+</html>
