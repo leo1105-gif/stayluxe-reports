@@ -77,7 +77,9 @@
   .ord button{width:26px;height:24px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:10px;color:var(--muted)}
   .ord button:disabled{opacity:.3;cursor:default}
   .ord .pos{font-size:13px;font-weight:700;color:var(--orange)}
-  .ethumb{width:120px;height:96px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#e7e2da}
+  .ethumbwrap{position:relative;flex-shrink:0}
+  .ethumb{width:120px;height:96px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#e7e2da;display:block}
+  .ulbadge{position:absolute;top:8px;right:8px;white-space:nowrap;background:linear-gradient(135deg,#caa04f,#8a5a1c);color:#fff;font-family:'Big Caslon','Big Caslon FB','Cormorant Garamond',Georgia,serif;font-size:9px;font-weight:600;letter-spacing:.3px;padding:3px 9px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
   .emain{flex:1;min-width:0}
   .eloc{font-size:10.5px;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;display:flex;gap:8px;align-items:center}
   .eloc .rt{color:var(--ink);font-weight:600}
@@ -116,7 +118,7 @@
   .fr{display:flex;gap:12px;align-items:center}
   .fdel{cursor:pointer;color:var(--muted)} .fdel:hover{color:var(--red)}
   .ftxt{cursor:pointer;flex:1}
-  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumb{width:100%;height:150px}}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumbwrap{width:100%}.ethumb{width:100%;height:150px}}
 </style>
 </head>
 <body>
@@ -159,6 +161,7 @@
         <div class="tab active" data-t="pm">Property Management</div>
         <div class="tab" data-t="exc">Exclusive Offers</div>
         <div class="tab" data-t="hl">Highlighted Residences</div>
+        <div class="tab" data-t="ultra">Ultra Luxe</div>
       </div>
 
       <div class="panel show" id="p-pm">
@@ -189,10 +192,18 @@
 
       <div class="panel" id="p-hl">
         <div class="collbar">
-          <div><div class="h">Highlighted Residences — home page section</div><div class="sub">Drag ⋮⋮ or use ▲▼ to set the order. Click a feature to edit or × to remove.</div></div>
+          <div><div class="h">Highlighted Residences — home page section <span id="cnt-hl"></span></div><div class="sub">Drag ⋮⋮ or use ▲▼ to set the order. Click a feature to edit or × to remove. Maximum 10 properties.</div></div>
           <div style="display:flex;gap:8px"><button class="btn" onclick="openPicker('hl')">＋ Add property</button><button class="btn org" onclick="save('Highlighted Residences')">Save changes</button></div>
         </div>
         <div id="hlList"></div>
+      </div>
+
+      <div class="panel" id="p-ultra">
+        <div class="collbar">
+          <div><div class="h">Ultra Luxe — home page section <span id="cnt-ultra"></span></div><div class="sub">Drag ⋮⋮ or use ▲▼ to set the order. Click a feature to edit or × to remove. Maximum 10 properties.</div></div>
+          <div style="display:flex;gap:8px"><button class="btn" onclick="openPicker('ultra')">＋ Add property</button><button class="btn org" onclick="save('Ultra Luxe')">Save changes</button></div>
+        </div>
+        <div id="ultraList"></div>
       </div>
     </div>
   </div>
@@ -236,8 +247,14 @@ let COLL={
    {id:"ocean",tags:["Free airport transfer","15% off for members","Champagne arrival"]},
    {id:"prop1",tags:["Free airport transfer","15% off for members","Butler service"]},
    {id:"bondi",tags:["Free airport transfer","15% off for members"]}
+ ],
+ ultra:[
+   {id:"edition",tags:["Private chef","24/7 concierge"]},
+   {id:"coral",tags:["Free airport transfer","15% off for members"]},
+   {id:"starluxe",tags:["Champagne arrival"]}
  ]
 };
+const MAX={hl:10,ultra:10};
 const $=id=>document.getElementById(id);
 
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
@@ -341,16 +358,17 @@ function renderColl(key){
     return `<div class="ecard" draggable="true" data-i="${i}">
       <div class="grip">⋮⋮</div>
       <div class="ord"><button data-up="${i}" ${i===0?'disabled':''}>▲</button><div class="pos">${i+1}</div><button data-down="${i}" ${i===arr.length-1?'disabled':''}>▼</button></div>
-      <img class="ethumb" referrerpolicy="no-referrer" src="${p.img}" alt="">
+      <div class="ethumbwrap"><img class="ethumb" referrerpolicy="no-referrer" src="${p.img}" alt="">${key==="ultra"?'<span class="ulbadge">Ultra Luxe</span>':''}</div>
       <div class="emain">
         <div class="eloc">${p.loc} <span class="rt">★ ${p.rating}/5</span></div>
         <div class="ename">${p.name}</div>
         <div class="especs">${specs(p)}</div>
-        <div class="tags">${tags}${key!=="hl"?`<button class="addfeat" data-feat="${i}">＋ Add feature</button>`:""}</div>
+        <div class="tags">${tags}${key==="exc"?`<button class="addfeat" data-feat="${i}">＋ Add feature</button>`:""}</div>
       </div>
       <div class="eright"><div class="eprice">${p.price}</div><button class="rm" data-rm="${i}">Remove</button></div>
     </div>`;
   }).join("");
+  const cn=document.getElementById("cnt-"+key); if(cn&&MAX[key]) cn.textContent="("+arr.length+"/"+MAX[key]+")";
   bind(key);
 }
 function bind(key){
@@ -374,7 +392,7 @@ function bind(key){
 let pickKey=null;
 function openPicker(key){
   pickKey=key;
-  $("pickTitle").textContent="Add property to "+(key==="exc"?"Exclusive Offers":"Highlighted Residences");
+  $("pickTitle").textContent="Add property to "+(key==="exc"?"Exclusive Offers":key==="ultra"?"Ultra Luxe":"Highlighted Residences");
   $("pickBody").innerHTML=`<input class="picksearch" id="pickSearch" placeholder="Search properties by name or location…"><div id="pickList"></div>`;
   $("pickSearch").oninput=renderPickList;
   renderPickList();
@@ -385,10 +403,14 @@ function renderPickList(){
   const inColl=new Set(COLL[pickKey].map(x=>x.id));
   const avail=Object.keys(PROPS).filter(id=>!inColl.has(id) && (PROPS[id].name+" "+PROPS[id].loc).toLowerCase().includes(q));
   const box=$("pickList");
-  box.innerHTML=avail.length?avail.map(id=>{const p=PROPS[id];
+  const maxed=MAX[pickKey] && COLL[pickKey].length>=MAX[pickKey];
+  const notice=maxed?`<div class="empty" style="border:none;color:var(--red)">Maximum ${MAX[pickKey]} properties reached — remove one before adding another.</div>`:"";
+  box.innerHTML=notice+(avail.length?avail.map(id=>{const p=PROPS[id];
     return `<div class="pick"><img referrerpolicy="no-referrer" src="${p.img}"><div class="nm">${p.name}<div class="l">${p.loc} · ★ ${p.rating}/5</div></div><button class="add" data-pick="${id}">Add</button></div>`;}).join("")
-    :`<div class="empty" style="border:none">No matching properties.</div>`;
-  box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{COLL[pickKey].push({id:b.dataset.pick,tags:[]});renderColl(pickKey);renderPickList();});
+    :`<div class="empty" style="border:none">No matching properties.</div>`);
+  box.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{
+    if(MAX[pickKey] && COLL[pickKey].length>=MAX[pickKey]){alert("Maximum "+MAX[pickKey]+" properties allowed in this section.");return;}
+    COLL[pickKey].push({id:b.dataset.pick,tags:[]});renderColl(pickKey);renderPickList();});
 }
 function closePicker(){$("overlay").classList.remove("show");}
 $("overlay").onclick=e=>{if(e.target===$("overlay"))closePicker();};
@@ -417,9 +439,9 @@ $("fOverlay").onclick=e=>{if(e.target===$("fOverlay"))closeFeat();};
 $("featCreate").onclick=()=>{const v=($("featNew").value||"").trim();if(!v)return;libAdd(v);const {key,i}=featTarget;if(!COLL[key][i].tags.includes(v))COLL[key][i].tags.push(v);$("featNew").value="";renderColl(key);renderFeatList();};
 $("featNew").onkeydown=e=>{if(e.key==="Enter")$("featCreate").onclick();};
 
-function save(name){alert("Saved "+name+" order & features.\n(Production: PATCH /admin/api/home-sections/"+(name.includes('Exclusive')?'exclusive':'highlighted')+")");}
+function save(name){const slug=name.includes('Exclusive')?'exclusive':name.includes('Ultra')?'ultra':'highlighted';alert("Saved "+name+" order & features.\n(Production: PATCH /admin/api/home-sections/"+slug+")");}
 
-seedFeatures();renderColl("exc");renderColl("hl");
+seedFeatures();renderColl("exc");renderColl("hl");renderColl("ultra");
 </script>
 </body>
 </html>
