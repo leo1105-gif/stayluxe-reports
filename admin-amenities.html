@@ -127,12 +127,8 @@
         <div id="typesWrap"></div>
 
         <div class="sectitle">Booking policies</div>
-        <div class="bp">
-          <div><h4>House Rules</h4><div id="houseRules"></div>
-            <div class="addrow"><input placeholder="Enter custom booking policy"><button class="btn accent">Add</button></div></div>
-          <div><h4>Good to Know</h4><div id="goodToKnow"></div>
-            <div class="addrow"><input placeholder="Enter custom note"><button class="btn accent">Add</button></div></div>
-        </div>
+        <div class="mnote">Policies work just like amenities — expand a group, search within it, tick what applies, and add, rename, delete or reorder. The order set here is the order shown on the guest listing page.</div>
+        <div id="policyWrap"></div>
       </div>
     </div>
   </div>
@@ -143,7 +139,7 @@ const ADMIN=true;
 const PER_PAGE=30;
 const $=id=>document.getElementById(id);
 const on=n=>({name:n,on:true}), off=n=>({name:n,on:false});
-const TYPES=[
+const AMENITIES=[
  {key:"day",name:"Day-to-Day",ui:{open:true,q:"",page:1},items:[
    on("WiFi"),on("Air Conditioning"),on("Television"),on("Dining Table"),on("Dryer"),on("Vacuum Cleaner"),
    on("Towels"),on("Power Backup"),on("Workspace Desk"),on("Outdoor Seating"),on("Washing machine"),on("Bathtub"),on("Central heating"),
@@ -164,29 +160,50 @@ const TYPES=[
  ]}
 ];
 
-function typeByKey(k){return TYPES.find(t=>t.key===k);}
-function renderTypes(){
-  $("typesWrap").innerHTML=TYPES.map(t=>`
+const POLICIES=[
+ {key:"hr",name:"House Rules",ui:{open:true,q:"",page:1},items:[
+   off("Children welcome (1–12 years)"),off("Infants welcome (under 12 months)"),off("No parties or events"),on("No smoking"),off("Pets Welcome"),
+   off("Suitable for events"),off("Long-term stays allowed"),off("Quiet hours after 10pm"),off("No commercial photography")
+ ]},
+ {key:"gk",name:"Good to Know",ui:{open:true,q:"",page:1},items:[
+   on("On floor 4"),off("Air conditioning available"),off("Self check-in with lockbox"),off("Free on-site parking"),off("Stairs to entrance")
+ ]}
+];
+
+const GROUPS=[
+ {id:"amen",wrap:"typesWrap",coll:AMENITIES,top3:true,noun:"amenity",plural:"amenities"},
+ {id:"pol",wrap:"policyWrap",coll:POLICIES,top3:true,noun:"policy",plural:"policies"}
+];
+
+function allCats(){return GROUPS.reduce((a,g)=>a.concat(g.coll),[]);}
+function typeByKey(k){return allCats().find(t=>t.key===k);}
+function groupOfKey(k){return GROUPS.find(g=>g.coll.some(t=>t.key===k));}
+
+function renderGroup(g){
+  $(g.wrap).innerHTML=g.coll.map(t=>`
     <div class="atype ${t.ui.open?'open':''}" data-k="${t.key}">
       <div class="atype-h" data-h="${t.key}"><span class="chev">▸</span> ${t.name} <span class="cnt" id="cnt-${t.key}"></span></div>
       <div class="atype-b">
         <input class="asearch" data-s="${t.key}" placeholder="Search ${t.name}…" value="${t.ui.q}">
-        <div class="toplegend"><span class="sw"></span> The first 3 amenities (top row) are the <b>&nbsp;Top 3 shown on the listing page</b>&nbsp;— drag or use ▲▼ to change which ones lead.</div>
+        ${g.top3?`<div class="toplegend"><span class="sw"></span> The first 3 (top row) are the <b>&nbsp;Top 3 shown on the listing page</b>&nbsp;— drag or use ▲▼ to change which ones lead.</div>`:``}
         <div class="agrid" id="grid-${t.key}"></div>
         <div class="apager" id="pager-${t.key}"></div>
-        ${ADMIN?`<div class="addrow" style="margin-top:14px"><input placeholder="Add a new amenity to ${t.name}…" data-add="${t.key}"><button class="btn accent" data-addbtn="${t.key}">＋ Add</button></div>`:""}
+        ${ADMIN?`<div class="addrow" style="margin-top:14px"><input placeholder="Add a new ${g.noun} to ${t.name}…" data-add="${t.key}"><button class="btn accent" data-addbtn="${t.key}">＋ Add</button></div>`:""}
       </div>
     </div>`).join("");
+}
+function renderAll(){
+  GROUPS.forEach(renderGroup);
   document.querySelectorAll("[data-h]").forEach(h=>h.onclick=()=>{const t=typeByKey(h.dataset.h);t.ui.open=!t.ui.open;h.closest(".atype").classList.toggle("open",t.ui.open);});
   document.querySelectorAll("[data-s]").forEach(s=>s.oninput=()=>{const t=typeByKey(s.dataset.s);t.ui.q=s.value;t.ui.page=1;renderGrid(t.key);});
   if(ADMIN){
-    document.querySelectorAll("[data-addbtn]").forEach(b=>b.onclick=()=>{const t=typeByKey(b.dataset.addbtn);const inp=document.querySelector(`[data-add="${t.key}"]`);const v=(inp.value||"").trim();if(!v)return;t.items.push({name:v,on:true});inp.value="";t.ui.page=Math.ceil(t.items.length/PER_PAGE);renderGrid(t.key);toast('“'+v+'” added — also saved to the master amenity list');});
+    document.querySelectorAll("[data-addbtn]").forEach(b=>b.onclick=()=>{const t=typeByKey(b.dataset.addbtn);const g=groupOfKey(t.key);const inp=document.querySelector(`[data-add="${t.key}"]`);const v=(inp.value||"").trim();if(!v)return;t.items.push({name:v,on:true});inp.value="";t.ui.page=Math.ceil(t.items.length/PER_PAGE);renderGrid(t.key);toast('“'+v+'” added'+(g.id==='amen'?' — also saved to the master amenity list':' — also saved to the master policy list'));});
     document.querySelectorAll("[data-add]").forEach(inp=>inp.onkeydown=e=>{if(e.key==="Enter")document.querySelector(`[data-addbtn="${inp.dataset.add}"]`).click();});
   }
-  TYPES.forEach(t=>renderGrid(t.key));
+  allCats().forEach(t=>renderGrid(t.key));
 }
 function renderGrid(key){
-  const t=typeByKey(key);
+  const t=typeByKey(key);const g=groupOfKey(key);
   const q=t.ui.q.toLowerCase();
   const filtered=t.items.map((it,idx)=>({it,idx})).filter(o=>o.it.name.toLowerCase().includes(q));
   const pages=Math.max(1,Math.ceil(filtered.length/PER_PAGE));
@@ -197,7 +214,7 @@ function renderGrid(key){
   grid.innerHTML=slice.length?slice.map(o=>{
     const ord=`<span class="ord"><span class="up" data-up="${key}-${o.idx}" title="Move up">▲</span><span class="grip" title="Drag to reorder">⣿</span><span class="dn" data-down="${key}-${o.idx}" title="Move down">▼</span></span>`;
     const acts=`<span class="acts"><span title="Rename" data-edit="${key}-${o.idx}">✎</span><span title="Delete" data-del="${key}-${o.idx}">🗑</span></span>`;
-    const top3=o.idx<3;
+    const top3=g.top3&&o.idx<3;
     const tag=top3?`<span class="top3tag" title="Shown on the listing page">★ On listing</span>`:"";
     return `<div class="aitem ${o.it.on?'on':''} ${top3?'top3':''}" draggable="true" data-card="${key}-${o.idx}">
       ${ord}<input type="checkbox" ${o.it.on?'checked':''} data-tog="${key}-${o.idx}">
@@ -233,24 +250,15 @@ function renderGrid(key){
   }
   const pager=$("pager-"+key);
   let pb="";for(let p=1;p<=pages;p++)pb+=`<button class="${p===t.ui.page?'on':''}" data-p="${key}-${p}">${p}</button>`;
-  pager.innerHTML=(pages>1?pb:"")+`<span class="info">${filtered.length} amenities · ${t.items.filter(x=>x.on).length} selected</span>`;
+  pager.innerHTML=(pages>1?pb:"")+`<span class="info">${filtered.length} ${g.plural} · ${t.items.filter(x=>x.on).length} selected</span>`;
   pager.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const p=b.dataset.p.split("-");typeByKey(p[0]).ui.page=+p[1];renderGrid(p[0]);});
   const c=$("cnt-"+key);if(c)c.textContent=t.items.filter(x=>x.on).length+" selected · "+t.items.length+" available";
-}
-
-const HR=[{n:"Children welcome (1–12 years)",on:false},{n:"Infants welcome (under 12 months)",on:false},{n:"No parties or events",on:false},{n:"No smoking",on:true},{n:"Pets Welcome",on:false}];
-const GK=[{n:"On floor 4",on:true},{n:"Air Conditioning",on:false},{n:"WiFi",on:false}];
-function renderPolicies(){
-  const row=(a,i,g)=>`<div class="prow ${a.on?'on':''}"><input type="checkbox" ${a.on?'checked':''} data-pol="${g}-${i}"><span>${a.n}</span></div>`;
-  $("houseRules").innerHTML=HR.map((a,i)=>row(a,i,'hr')).join("");
-  $("goodToKnow").innerHTML=GK.map((a,i)=>row(a,i,'gk')).join("");
-  document.querySelectorAll("[data-pol]").forEach(cb=>cb.onchange=()=>{const[g,i]=cb.dataset.pol.split("-");(g==='hr'?HR:GK)[+i].on=cb.checked;renderPolicies();});
 }
 
 let toastTimer;
 function toast(msg){let el=$("toast");if(!el){el=document.createElement("div");el.id="toast";el.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#2a2622;color:#fff;padding:10px 16px;border-radius:8px;font-size:12.5px;z-index:200;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:.3s";document.body.appendChild(el);}el.textContent=msg;el.style.opacity="1";clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.opacity="0",2400);}
 
-renderTypes();renderPolicies();
+renderAll();
 </script>
 </body>
 </html>
