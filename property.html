@@ -140,6 +140,10 @@
   .fp-range input{padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;width:160px}
   .fp-foot{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-top:1px solid var(--line)}
   .p-blue{background:#e3ecfb;color:#3566c4}
+  thead th[data-sort]{cursor:pointer;user-select:none}
+  thead th[data-sort]:hover{color:var(--orange-d)}
+  .sar{font-size:10px;margin-left:4px;color:#b9b0a0}
+  thead th.sorted .sar{color:var(--orange)}
   @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumbwrap{width:100%}.ethumb{width:100%;height:150px}.filterpop{width:94vw}}
 </style>
 </head>
@@ -196,7 +200,17 @@
         <div class="chips" id="pmChips"></div>
         <div class="tablewrap">
           <table>
-            <thead><tr><th>Property</th><th>Property ID</th><th>Type</th><th>Created</th><th>Location</th><th>Bookings</th><th>Booking Model</th><th>Status</th><th>Details</th><th>Actions</th></tr></thead>
+            <thead><tr>
+              <th data-sort="name">Property<span class="sar"></span></th>
+              <th data-sort="pid">Property ID<span class="sar"></span></th>
+              <th data-sort="type">Type<span class="sar"></span></th>
+              <th data-sort="created">Created<span class="sar"></span></th>
+              <th data-sort="city">Location<span class="sar"></span></th>
+              <th data-sort="bk">Bookings<span class="sar"></span></th>
+              <th data-sort="model">Booking Model<span class="sar"></span></th>
+              <th data-sort="status">Status<span class="sar"></span></th>
+              <th data-sort="det">Details<span class="sar"></span></th>
+            </tr></thead>
             <tbody id="pmBody"></tbody>
           </table>
         </div>
@@ -340,7 +354,7 @@ function pmMatches(p){
   return true;
 }
 function renderPM(){
-  const rows=INV.filter(pmMatches);
+  const rows=sortRows(INV.filter(pmMatches));
   $("kpiTotal").textContent=rows.length;
   $("kpiActive").textContent=rows.filter(p=>p.status==="Active").length;
   $("kpiPending").textContent=rows.filter(p=>p.status==="Pending").length;
@@ -352,11 +366,39 @@ function renderPM(){
     <td>${p.bk}</td>
     <td><span class="pill ${p.model==='Instant Book'?'p-green':'p-blue'}">${p.model==='Instant Book'?'⚡ Instant Book':'✉ Enquiry Only'}</span></td>
     <td><span class="pill ${spill(p.status)}">${p.status} ▾</span></td>
-    <td class="det">🛏 ${p.det}</td>
-    <td><div class="acts"><span title="View">👁</span><span title="Edit">✎</span><span title="Delete">🗑</span></div></td></tr>`).join("")
-    :`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">No properties match these filters.</td></tr>`;
+    <td class="det">🛏 ${p.det}</td></tr>`).join("")
+    :`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px">No properties match these filters.</td></tr>`;
   $("pmCount").textContent="Showing "+rows.length+" of "+INV.length+" properties";
-  renderChips();updateFBadge();
+  renderChips();updateFBadge();updateSortArrows();
+}
+let sort={key:null,dir:"asc"};
+const SORTNUM=new Set(["bk"]);
+function sortRows(rows){
+  if(!sort.key)return rows;
+  const k=sort.key;
+  return rows.slice().sort((a,b)=>{
+    let x=a[k],y=b[k];
+    if(k==="created"){x=toISO(x);y=toISO(y);}
+    else if(SORTNUM.has(k)){x=+x;y=+y;}
+    else{x=String(x).toLowerCase();y=String(y).toLowerCase();}
+    if(x>y)return sort.dir==="asc"?1:-1;
+    if(x<y)return sort.dir==="asc"?-1:1;
+    return 0;
+  });
+}
+function bindSort(){
+  document.querySelectorAll("th[data-sort]").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.sort;
+    if(sort.key===k)sort.dir=sort.dir==="asc"?"desc":"asc";else{sort.key=k;sort.dir="asc";}
+    renderPM();
+  });
+}
+function updateSortArrows(){
+  document.querySelectorAll("th[data-sort]").forEach(th=>{
+    const active=sort.key===th.dataset.sort;
+    th.classList.toggle("sorted",active);
+    th.querySelector(".sar").textContent=active?(sort.dir==="asc"?"▲":"▼"):"↕";
+  });
 }
 function renderChips(){
   const items=[];
@@ -426,7 +468,7 @@ $("filterPop").addEventListener("click",e=>e.stopPropagation());
 document.addEventListener("click",()=>$("filterPop").classList.remove("show"));
 $("fSearch").oninput=renderPM;
 $("clearF").onclick=()=>{filters={};$("fSearch").value="";renderPM();};
-renderPM();
+bindSort();renderPM();
 
 /* ---- collection editor ---- */
 function specs(p){return `👤 ${p.guests} Guest · 🛏 ${p.beds} Bed · 🛁 ${p.baths} Bath · ${p.sqm} sqm`;}
