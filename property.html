@@ -118,7 +118,29 @@
   .fr{display:flex;gap:12px;align-items:center}
   .fdel{cursor:pointer;color:var(--muted)} .fdel:hover{color:var(--red)}
   .ftxt{cursor:pointer;flex:1}
-  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumbwrap{width:100%}.ethumb{width:100%;height:150px}}
+  /* advanced Filters panel (index.html style) */
+  .menuwrap{position:relative}
+  .fbadge{background:var(--orange);color:#fff;border-radius:11px;font-size:10px;padding:1px 6px;font-weight:700;display:none}
+  .pop{position:absolute;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 12px 34px rgba(20,30,60,.18);z-index:40;padding:0;display:none}
+  .pop.show{display:block}
+  .filterpop{width:560px;left:0;top:calc(100% + 6px)}
+  .fp-body{display:flex;max-height:340px}
+  .fp-cats{width:210px;border-right:1px solid var(--line);padding:8px;overflow:auto}
+  .fp-cat{padding:9px 10px;border-radius:7px;font-size:12.5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--ink)}
+  .fp-cat:hover{background:#f5f6f8}
+  .fp-cat.on{background:#fdebd8;color:var(--orange-d);font-weight:600}
+  .fp-badge{background:var(--orange);color:#fff;border-radius:11px;font-size:10px;padding:1px 7px;font-weight:700}
+  .fp-opts{flex:1;padding:10px 12px;overflow:auto}
+  .fp-opt{display:flex;align-items:center;gap:9px;padding:7px 6px;font-size:12.5px;border-radius:6px;cursor:pointer}
+  .fp-opt:hover{background:#f5f6f8}
+  .fp-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .d-green{background:var(--green)}.d-amber{background:var(--amber)}.d-red{background:var(--red)}.d-gray{background:var(--gray)}.d-blue{background:var(--blue)}
+  .fp-range{display:flex;gap:14px;flex-wrap:wrap}
+  .fp-range label{display:flex;flex-direction:column;font-size:11px;color:var(--muted);gap:4px}
+  .fp-range input{padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;width:160px}
+  .fp-foot{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-top:1px solid var(--line)}
+  .p-blue{background:#e3ecfb;color:#3566c4}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.ecard{flex-wrap:wrap}.ethumbwrap{width:100%}.ethumb{width:100%;height:150px}.filterpop{width:94vw}}
 </style>
 </head>
 <body>
@@ -166,17 +188,15 @@
 
       <div class="panel show" id="p-pm">
         <div class="flt">
-          <div class="msel"><button class="mbtn" id="btnCountry">Country ▾</button><div class="mpop" id="popCountry"></div></div>
-          <div class="msel"><button class="mbtn" id="btnCity">City ▾</button><div class="mpop" id="popCity"></div></div>
-          <div class="msel"><button class="mbtn" id="btnStatus">Status ▾</button><div class="mpop" id="popStatus"></div></div>
-          <div class="search">🔍<input id="fSearch" placeholder="Search property…"></div>
-          <button class="btn" id="clearF">⌫ Clear</button>
+          <div class="search">🔍<input id="fSearch" placeholder="Search all fields…"></div>
+          <div class="menuwrap"><button class="btn" id="btnFilters">⛃ Filters <span class="fbadge" id="fCount"></span> ▾</button><div class="pop filterpop" id="filterPop"></div></div>
+          <button class="btn" id="clearF">⌫ Clear filters</button>
           <span class="count" id="pmCount" style="margin-left:auto"></span>
         </div>
         <div class="chips" id="pmChips"></div>
         <div class="tablewrap">
           <table>
-            <thead><tr><th>Property</th><th>Property ID</th><th>Type</th><th>Created</th><th>Location</th><th>Bookings</th><th>Status</th><th>Details</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Property</th><th>Property ID</th><th>Type</th><th>Created</th><th>Location</th><th>Bookings</th><th>Booking Model</th><th>Status</th><th>Details</th><th>Actions</th></tr></thead>
             <tbody id="pmBody"></tbody>
           </table>
         </div>
@@ -289,30 +309,38 @@ const INV=[
  {name:"Suva Garden Apartment",sub:"Suva CBD",pid:"FJ-003",type:"Apartment",created:"May 8, 2026",country:"Fiji",city:"Suva",bk:1,status:"Inactive",det:"1 · 1 · 600 sq ft"}
 ];
 const spill=s=>s==="Active"?"p-green":(s==="Pending"?"p-amber":"p-gray");
-const COUNTRIES=["Australia","New Zealand","Fiji"], STATUSES=["Active","Pending","Inactive"];
-const selC=new Set(), selCity=new Set(), selSt=new Set();
-const cityOpts=()=>[...new Set(INV.filter(p=>!selC.size||selC.has(p.country)).map(p=>p.city))].sort();
-function buildPop(popId,opts,set,after){
-  const pop=$(popId);
-  pop.innerHTML=opts.length?opts.map(o=>`<label class="mopt"><input type="checkbox" value="${o}" ${set.has(o)?'checked':''}> ${o}</label>`).join(""):`<div style="padding:8px;color:var(--muted);font-size:12px">No options</div>`;
-  pop.querySelectorAll("input").forEach(cb=>cb.onchange=()=>{cb.checked?set.add(cb.value):set.delete(cb.value);if(after)after();updateBtns();renderPM();});
-}
-function updateBtns(){
-  $("btnCountry").innerHTML="Country"+(selC.size?` (${selC.size})`:"")+" ▾";$("btnCountry").classList.toggle("on",selC.size>0);
-  $("btnCity").innerHTML="City"+(selCity.size?` (${selCity.size})`:"")+" ▾";$("btnCity").classList.toggle("on",selCity.size>0);
-  $("btnStatus").innerHTML="Status"+(selSt.size?` (${selSt.size})`:"")+" ▾";$("btnStatus").classList.toggle("on",selSt.size>0);
-}
-function rebuildCity(){const valid=new Set(cityOpts());[...selCity].forEach(c=>{if(!valid.has(c))selCity.delete(c);});buildPop("popCity",cityOpts(),selCity);}
-function removeSel(type,v){
-  if(type==="country"){selC.delete(v);buildPop("popCountry",COUNTRIES,selC,rebuildCity);rebuildCity();}
-  else if(type==="city"){selCity.delete(v);buildPop("popCity",cityOpts(),selCity);}
-  else if(type==="status"){selSt.delete(v);buildPop("popStatus",STATUSES,selSt);}
-  else{$("fSearch").value="";}
-  updateBtns();renderPM();
+/* assign a booking model to each property (mockup data) */
+INV.forEach((p,i)=>{p.model=(i%3===0)?"Enquiry Only":"Instant Book";});
+
+/* ---- advanced Filters panel (index.html style) covering every field ---- */
+const FILTERCATS=[
+ {key:"country",label:"Country",type:"enum"},
+ {key:"city",label:"City",type:"enum"},
+ {key:"status",label:"Status",type:"enum",dots:{Active:"green",Pending:"amber",Inactive:"gray"}},
+ {key:"type",label:"Property Type",type:"enum"},
+ {key:"model",label:"Booking Model",type:"enum",dots:{"Instant Book":"green","Enquiry Only":"blue"}},
+ {key:"created",label:"Created date",type:"daterange"},
+ {key:"bk",label:"Bookings",type:"range"},
+];
+const distinct=k=>[...new Set(INV.map(p=>p[k]))].sort();
+const toISO=s=>{const d=new Date(s);return isNaN(d)?"":d.toISOString().slice(0,10);};
+let filters={};                 // key -> array | {from,to} | {min,max}
+let panelCat="country", draft={};
+const hasVal=(cat,f)=>{if(f==null)return false;if(cat.type==="enum")return Array.isArray(f)&&f.length>0;if(cat.type==="daterange")return !!(f.from||f.to);return !!((f.min!==""&&f.min!=null)||(f.max!==""&&f.max!=null));};
+
+function pmMatches(p){
+  const q=($("fSearch").value||"").toLowerCase();
+  if(q && !(p.name+" "+p.pid+" "+p.city+" "+p.country+" "+p.type+" "+p.model+" "+p.status).toLowerCase().includes(q))return false;
+  for(const cat of FILTERCATS){
+    const f=filters[cat.key]; if(!hasVal(cat,f))continue;
+    if(cat.type==="enum"){if(!f.includes(p[cat.key]))return false;}
+    else if(cat.type==="daterange"){const v=toISO(p.created);if(f.from&&v<f.from)return false;if(f.to&&v>f.to)return false;}
+    else{const v=+p[cat.key];if(f.min!==""&&f.min!=null&&v<+f.min)return false;if(f.max!==""&&f.max!=null&&v>+f.max)return false;}
+  }
+  return true;
 }
 function renderPM(){
-  const q=($("fSearch").value||"").toLowerCase();
-  const rows=INV.filter(p=>(!selC.size||selC.has(p.country))&&(!selCity.size||selCity.has(p.city))&&(!selSt.size||selSt.has(p.status))&&(!q||(p.name+" "+p.pid+" "+p.city).toLowerCase().includes(q)));
+  const rows=INV.filter(pmMatches);
   $("kpiTotal").textContent=rows.length;
   $("kpiActive").textContent=rows.filter(p=>p.status==="Active").length;
   $("kpiPending").textContent=rows.filter(p=>p.status==="Pending").length;
@@ -321,30 +349,83 @@ function renderPM(){
     <td><div class="pname">${p.name}</div><div class="psub">${p.sub}</div></td>
     <td>${p.pid}</td><td>${p.type}</td><td class="psub">${p.created}</td>
     <td><span style="color:var(--blue)">${p.city}</span><div class="psub">${p.country}</div></td>
-    <td>${p.bk}</td><td><span class="pill ${spill(p.status)}">${p.status} ▾</span></td>
+    <td>${p.bk}</td>
+    <td><span class="pill ${p.model==='Instant Book'?'p-green':'p-blue'}">${p.model==='Instant Book'?'⚡ Instant Book':'✉ Enquiry Only'}</span></td>
+    <td><span class="pill ${spill(p.status)}">${p.status} ▾</span></td>
     <td class="det">🛏 ${p.det}</td>
     <td><div class="acts"><span title="View">👁</span><span title="Edit">✎</span><span title="Delete">🗑</span></div></td></tr>`).join("")
-    :`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px">No properties match these filters.</td></tr>`;
+    :`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">No properties match these filters.</td></tr>`;
   $("pmCount").textContent="Showing "+rows.length+" of "+INV.length+" properties";
+  renderChips();updateFBadge();
+}
+function renderChips(){
   const items=[];
-  selC.forEach(v=>items.push(["Country",v,()=>removeSel("country",v)]));
-  selCity.forEach(v=>items.push(["City",v,()=>removeSel("city",v)]));
-  selSt.forEach(v=>items.push(["Status",v,()=>removeSel("status",v)]));
-  if($("fSearch").value)items.push(["Search",$("fSearch").value,()=>removeSel("search")]);
+  if($("fSearch").value)items.push(["Search",$("fSearch").value,()=>{$("fSearch").value="";renderPM();}]);
+  FILTERCATS.forEach(cat=>{const f=filters[cat.key];if(!hasVal(cat,f))return;
+    let disp;
+    if(cat.type==="enum")disp=f.join(", ");
+    else if(cat.type==="daterange")disp=(f.from||"…")+" → "+(f.to||"…");
+    else disp=(f.min!==""&&f.min!=null?f.min:"0")+"–"+(f.max!==""&&f.max!=null?f.max:"∞");
+    items.push([cat.label,disp,()=>{delete filters[cat.key];renderPM();}]);
+  });
   const ch=$("pmChips");
-  ch.innerHTML=items.length?items.map((it,i)=>`<span class="chip"><b>${it[0]}:</b> ${it[1]} <span class="x" data-ci="${i}">✕</span></span>`).join(""):'<span class="count">No filters applied — pick any mix of countries, cities &amp; statuses</span>';
+  ch.innerHTML=items.length?items.map((it,i)=>`<span class="chip"><b>${it[0]}:</b> ${it[1]} <span class="x" data-ci="${i}">✕</span></span>`).join(""):'<span class="count">No filters applied — use ⛃ Filters to filter by any field</span>';
   ch._acts=items.map(it=>it[2]); ch.querySelectorAll(".x").forEach(x=>x.onclick=()=>ch._acts[+x.dataset.ci]());
 }
-buildPop("popCountry",COUNTRIES,selC,rebuildCity);
-buildPop("popStatus",STATUSES,selSt);
-rebuildCity();updateBtns();
-[["btnCountry","popCountry"],["btnCity","popCity"],["btnStatus","popStatus"]].forEach(([b,p])=>{
-  $(b).onclick=e=>{e.stopPropagation();const el=$(p),open=el.classList.contains("show");document.querySelectorAll(".mpop").forEach(x=>x.classList.remove("show"));if(!open)el.classList.add("show");};
-});
-document.querySelectorAll(".mpop").forEach(p=>p.addEventListener("click",e=>e.stopPropagation()));
-document.addEventListener("click",()=>document.querySelectorAll(".mpop").forEach(x=>x.classList.remove("show")));
+function openPanelInit(){
+  draft={};
+  FILTERCATS.forEach(cat=>{const f=filters[cat.key];
+    if(cat.type==="enum")draft[cat.key]=Array.isArray(f)?f.slice():[];
+    else if(cat.type==="daterange")draft[cat.key]=f?{from:f.from||"",to:f.to||""}:{from:"",to:""};
+    else draft[cat.key]=f?{min:f.min||"",max:f.max||""}:{min:"",max:""};});
+}
+function draftCount(cat){const d=draft[cat.key];return hasVal(cat,d)?(cat.type==="enum"?d.length:1):0;}
+function renderFilterPanel(){
+  const pop=$("filterPop");
+  const cats=`<div class="fp-cats">`+FILTERCATS.map(c=>{const n=draftCount(c);
+    return `<div class="fp-cat ${c.key===panelCat?'on':''}" data-cat="${c.key}">${c.label}${n?`<span class="fp-badge">${n}</span>`:""}</div>`;}).join("")+`</div>`;
+  const cat=FILTERCATS.find(c=>c.key===panelCat);
+  let opts="";
+  if(cat.type==="enum"){
+    opts=distinct(cat.key).map(v=>{const sel=(draft[cat.key]||[]).includes(v);
+      const dot=cat.dots&&cat.dots[v]?`<span class="fp-dot d-${cat.dots[v]}"></span>`:"";
+      return `<label class="fp-opt"><input type="checkbox" data-v="${v}" ${sel?'checked':''}>${dot}<span>${v}</span></label>`;}).join("");
+  }else if(cat.type==="daterange"){
+    const r=draft[cat.key]||{from:"",to:""};
+    opts=`<div class="fp-range"><label>From<input type="date" id="dtFrom" value="${r.from}"></label><label>To<input type="date" id="dtTo" value="${r.to}"></label></div>`;
+  }else{
+    const r=draft[cat.key]||{min:"",max:""};
+    opts=`<div class="fp-range"><label>Min bookings<input type="number" min="0" id="rgMin" value="${r.min}"></label><label>Max bookings<input type="number" min="0" id="rgMax" value="${r.max}"></label></div>`;
+  }
+  pop.innerHTML=`<div class="fp-body">${cats}<div class="fp-opts">${opts}</div></div>
+    <div class="fp-foot"><button class="btn" id="fpReset">Reset filters</button><button class="btn org" id="fpApply">Apply</button></div>`;
+  pop.querySelectorAll(".fp-cat").forEach(el=>el.onclick=()=>{panelCat=el.dataset.cat;renderFilterPanel();});
+  if(cat.type==="enum"){
+    pop.querySelectorAll(".fp-opt input").forEach(cb=>cb.onchange=()=>{const arr=draft[cat.key]||[],v=cb.dataset.v;
+      if(cb.checked){if(!arr.includes(v))arr.push(v);}else{const i=arr.indexOf(v);if(i>=0)arr.splice(i,1);}draft[cat.key]=arr;renderFilterPanel();});
+  }else if(cat.type==="daterange"){
+    const ff=pop.querySelector("#dtFrom"),tt=pop.querySelector("#dtTo");
+    [ff,tt].forEach(inp=>inp.oninput=()=>{draft[cat.key]={from:ff.value,to:tt.value};});
+  }else{
+    const mn=pop.querySelector("#rgMin"),mx=pop.querySelector("#rgMax");
+    [mn,mx].forEach(inp=>inp.oninput=()=>{draft[cat.key]={min:mn.value,max:mx.value};});
+  }
+  pop.querySelector("#fpReset").onclick=resetPanel;
+  pop.querySelector("#fpApply").onclick=applyPanel;
+}
+function applyPanel(){
+  FILTERCATS.forEach(cat=>{const d=draft[cat.key];
+    if(hasVal(cat,d))filters[cat.key]=(cat.type==="enum"?d.slice():{...d});else delete filters[cat.key];});
+  $("filterPop").classList.remove("show");renderPM();
+}
+function resetPanel(){draft={};FILTERCATS.forEach(c=>{draft[c.key]=c.type==="enum"?[]:(c.type==="daterange"?{from:"",to:""}:{min:"",max:""});delete filters[c.key];});renderFilterPanel();renderPM();}
+function updateFBadge(){let n=0;FILTERCATS.forEach(c=>{if(hasVal(c,filters[c.key]))n++;});const b=$("fCount");if(b){b.textContent=n||"";b.style.display=n?"inline-block":"none";}}
+
+$("btnFilters").onclick=e=>{e.stopPropagation();const p=$("filterPop");const show=!p.classList.contains("show");p.classList.toggle("show",show);if(show){openPanelInit();renderFilterPanel();}};
+$("filterPop").addEventListener("click",e=>e.stopPropagation());
+document.addEventListener("click",()=>$("filterPop").classList.remove("show"));
 $("fSearch").oninput=renderPM;
-$("clearF").onclick=()=>{selC.clear();selCity.clear();selSt.clear();$("fSearch").value="";buildPop("popCountry",COUNTRIES,selC,rebuildCity);buildPop("popStatus",STATUSES,selSt);rebuildCity();updateBtns();renderPM();};
+$("clearF").onclick=()=>{filters={};$("fSearch").value="";renderPM();};
 renderPM();
 
 /* ---- collection editor ---- */
