@@ -214,9 +214,9 @@
   .avhead{display:flex;align-items:center;gap:11px;width:100%;cursor:pointer;background:#fff;border:none;padding:9px 12px;font:inherit;color:var(--ink);text-align:left}
   .avhead:hover{background:var(--cream)}
   .avhead .avcc{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px}
-  .avhead .avnum{font-family:var(--sans);font-size:18px;font-weight:600;line-height:1.05;letter-spacing:.2px;font-variant-numeric:tabular-nums}
+  .avhead .avnum{font-family:var(--sans);font-size:11px;font-weight:600;line-height:1.05;letter-spacing:.2px;font-variant-numeric:tabular-nums}
   .avhead .avmeta{display:flex;flex-direction:column}
-  .avhead .avchev{margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--gold);font-size:11px;font-weight:600}
+  .avhead .avchev{margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--ink);font-size:11px;font-weight:600}
   .avhead .avchev .avtxt{font-size:9.5px;letter-spacing:.5px;text-transform:uppercase}
   .avhead .avchev .avar{transition:transform .25s}
   .avacc.open .avhead .avchev .avar{transform:rotate(180deg)}
@@ -224,12 +224,12 @@
   .avrow{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);padding:9px 12px;border-top:1px solid var(--line)}
   .avrow:hover{background:var(--cream)}
   .avrow .avname{font-size:12.5px;color:var(--muted)}
-  .avrow .avnum{font-family:var(--sans);font-size:16px;font-weight:600;margin-left:auto;letter-spacing:.2px;font-variant-numeric:tabular-nums}
+  .avrow .avnum{font-family:var(--sans);font-size:10px;font-weight:600;margin-left:auto;letter-spacing:.2px;font-variant-numeric:tabular-nums}
   .avrow:hover .avnum{color:var(--orange)}
   .avbtns{display:flex;gap:9px}
-  .avbtn{flex:1;text-align:center;border-radius:10px;padding:9px;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
-  .avbtn.pri{background:var(--orange);color:#fff;border:1px solid var(--orange)}
-  .avbtn.pri:hover{background:var(--orange-d)}
+  .avbtn{flex:1;text-align:center;border-radius:26px;padding:9px;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .avbtn.pri{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .avbtn.pri:hover{border-color:var(--gold)}
   .avbtn.gho{background:#fff;color:var(--ink);border:1px solid var(--line)}
   .avbtn.gho:hover{border-color:var(--gold)}
   .avwa{width:15px;height:15px}
@@ -265,8 +265,10 @@
   .avcard.bg .avrow{color:#fff;border-top-color:rgba(255,255,255,.18)}
   .avcard.bg .avrow:hover{background:rgba(255,255,255,.10)}
   .avcard.bg .avrow .avname{color:rgba(255,255,255,.72)}
-  .avcard.bg .avbtn.gho{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.4)}
-  .avcard.bg .avbtn.gho:hover{border-color:#fff}
+  .avcard.bg .avbtn.pri{background:#fff;border-color:#fff;color:var(--ink)}
+  .avcard.bg .avbtn.pri:hover{background:#f1f1f1}
+  .avcard.bg .avbtn.gho{background:#fff;color:var(--ink);border-color:#fff}
+  .avcard.bg .avbtn.gho:hover{background:#f1f1f1}
 </style>
 </head>
 <body>
@@ -465,10 +467,7 @@
         <div class="nocharge">You won't be charged yet</div>
       </div>
 
-                  <div class="avcar">
-        <button class="avnav prev" aria-label="Previous">&#8249;</button>
-        <div class="avtrack" id="avtrack">
-          <div class="avslide"><div class="avcard">
+                        <div class="avcard">
         <div class="avbanner"></div>
         <div class="avovp">
           <h4>Our Stay Advisors are Available 24/7</h4>
@@ -482,53 +481,10 @@
             <div class="avbody"></div>
           </div>
           <div class="avbtns">
-            <a class="avbtn pri" href="mailto:reservations@stayluxe.com">Email Us</a>
-            <a class="avbtn gho" href="https://wa.me/6498886424" target="_blank" rel="noopener"><svg class="avwa" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24M8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.28-.25-.13-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.13-.16.25-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43-.14 0-.3-.01-.47-.01"/></svg> WhatsApp</a>
+            <a class="avbtn pri" href="mailto:reservations@stayluxe.com">Make an Enquiry</a>
+            <a class="avbtn gho" href="https://wa.me/6498886424" target="_blank" rel="noopener">WhatsApp Chat</a>
           </div>
         </div>
-      </div></div>
-          <div class="avslide"><div class="avcard np">
-        <div class="avovp">
-          <div class="avtop">
-            <div class="avbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1v-6a9 9 0 0 1 18 0v6a1 1 0 0 1-1 1h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg></div>
-            <div><h4>Our Stay Advisors are Available 24/7</h4></div>
-          </div>
-          <div class="avsub">Call or chat with our dedicated team.</div>
-          <div class="avacc">
-            <button class="avhead" aria-expanded="false">
-              <img class="avflag" src="https://flagcdn.com/w40/nz.png" alt="NZ">
-              <span class="avmeta"><span class="avcc">NEW ZEALAND</span><span class="avnum">+64 9 888 6424</span></span>
-              <span class="avchev"><span class="avtxt">All numbers</span><span class="avar">&#9660;</span></span>
-            </button>
-            <div class="avbody"></div>
-          </div>
-          <div class="avbtns">
-            <a class="avbtn pri" href="mailto:reservations@stayluxe.com">Email Us</a>
-            <a class="avbtn gho" href="https://wa.me/6498886424" target="_blank" rel="noopener"><svg class="avwa" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24M8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.28-.25-.13-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.13-.16.25-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43-.14 0-.3-.01-.47-.01"/></svg> WhatsApp</a>
-          </div>
-        </div>
-      </div></div>
-          <div class="avslide"><div class="avcard bg">
-        <div class="avovp">
-          <h4>Our Stay Advisors are Available 24/7</h4>
-          <div class="avsub">Call or chat with our dedicated team.</div>
-          <div class="avacc">
-            <button class="avhead" aria-expanded="false">
-              <img class="avflag" src="https://flagcdn.com/w40/nz.png" alt="NZ">
-              <span class="avmeta"><span class="avcc">NEW ZEALAND</span><span class="avnum">+64 9 888 6424</span></span>
-              <span class="avchev"><span class="avtxt">All numbers</span><span class="avar">&#9660;</span></span>
-            </button>
-            <div class="avbody"></div>
-          </div>
-          <div class="avbtns">
-            <a class="avbtn pri" href="mailto:reservations@stayluxe.com">Email Us</a>
-            <a class="avbtn gho" href="https://wa.me/6498886424" target="_blank" rel="noopener"><svg class="avwa" viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24M8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.28-.25-.13-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.13-.16.25-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43-.14 0-.3-.01-.47-.01"/></svg> WhatsApp</a>
-          </div>
-        </div>
-      </div></div>
-        </div>
-        <button class="avnav next" aria-label="Next">&#8250;</button>
-        <div class="avdots" id="avdots"></div>
       </div>
 </aside>
   </div>
@@ -734,19 +690,6 @@ renderCard();
     body.innerHTML=AV.map(row).join("");
     head.addEventListener("click",function(){var o=acc.classList.toggle("open");head.setAttribute("aria-expanded",o);body.style.maxHeight=o?body.scrollHeight+"px":"0px";});
   });
-})();
-</script>
-<script>
-(function(){
-  var track=document.getElementById("avtrack"); if(!track)return;
-  var slides=track.querySelectorAll(".avslide"), dots=document.getElementById("avdots");
-  slides.forEach(function(_,i){var b=document.createElement("button");b.className="avdot"+(i===0?" on":"");b.addEventListener("click",function(){track.scrollTo({left:track.clientWidth*i,behavior:"smooth"});});dots.appendChild(b);});
-  function cur(){return Math.round(track.scrollLeft/track.clientWidth);}
-  function sync(){var c=cur();dots.querySelectorAll(".avdot").forEach(function(d,i){d.classList.toggle("on",i===c);});}
-  track.addEventListener("scroll",function(){window.requestAnimationFrame(sync);});
-  var p=document.querySelector(".avnav.prev"), n=document.querySelector(".avnav.next");
-  if(p)p.addEventListener("click",function(){track.scrollTo({left:track.clientWidth*Math.max(0,cur()-1),behavior:"smooth"});});
-  if(n)n.addEventListener("click",function(){track.scrollTo({left:track.clientWidth*Math.min(slides.length-1,cur()+1),behavior:"smooth"});});
 })();
 </script>
 </body>
