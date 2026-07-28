@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stay Luxe — Booking Details</title>
+<style>
+  :root{
+    --navy1:#0b2a38;--navy2:#061821;--teal:#12b5cb;--teal-d:#0e93a5;
+    --ink:#1f2530;--muted:#8b93a1;--label:#9aa2af;--bg:#f2f4f6;--line:#e9ecf0;--line2:#eef1f4;
+    --green:#1f9d57;--greenbg:#e4f5eb;--red:#e0483f;--blue:#2f7de1;--bluebg:#dcecfb;
+    --sans:'Inter','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px}
+  .app{display:flex;min-height:100vh}
+  /* sidebar */
+  .side{width:210px;flex-shrink:0;background:linear-gradient(180deg,var(--navy1),var(--navy2));color:#cdd6df;display:flex;flex-direction:column}
+  .brand{font-family:Georgia,serif;letter-spacing:6px;color:#fff;font-size:15px;text-align:center;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .nav{padding:14px 12px;display:flex;flex-direction:column;gap:4px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;color:#c2ccd6;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none}
+  .nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav a.active{background:var(--teal);color:#fff;font-weight:600}
+  .nav .ic{width:16px;text-align:center}
+  /* main */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;justify-content:space-between}
+  .welcome{font-weight:700;color:var(--teal)}
+  .welcome span{color:var(--muted);font-weight:500;margin-left:4px}
+  .tbright{display:flex;align-items:center;gap:16px}
+  .bell{position:relative;color:#6b7480;font-size:17px}
+  .bell b{position:absolute;top:-6px;right:-8px;background:var(--teal);color:#fff;font-size:9px;border-radius:9px;padding:1px 5px;font-weight:700}
+  .userpill{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:22px;padding:4px 12px 4px 4px;font-size:13px;font-weight:600}
+  .ava{width:30px;height:30px;border-radius:50%;background:#0b2a38;color:#fff;display:grid;place-items:center;font-size:12px}
+  .wrap{padding:20px 26px 60px;display:flex;flex-direction:column;gap:16px}
+  .crumb{font-size:12.5px;color:var(--muted)}.crumb b{color:var(--ink);font-weight:600}
+  .pghead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .pghead h1{margin:0 0 6px;font-size:22px;font-weight:700}
+  .bkline{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+  .badge{font-size:11px;font-weight:600;border-radius:6px;padding:3px 9px}
+  .b-green{background:var(--greenbg);color:var(--green)}
+  .b-blue{background:var(--bluebg);color:var(--blue)}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 15px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+  .btn:hover{border-color:#cfd6de}
+  .content{display:flex;gap:16px;align-items:flex-start}
+  .col-l{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card h2{margin:0;font-size:14px;font-weight:700;padding:15px 20px;border-bottom:1px solid var(--line2)}
+  .card .body{padding:18px 20px}
+  /* property info */
+  .propgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .infobox{display:flex;gap:13px;align-items:center;background:#f4fafb;border:1px solid #e4f1f4;border-radius:11px;padding:15px}
+  .iico{width:42px;height:42px;border-radius:50%;background:#dceef2;color:var(--teal-d);display:grid;place-items:center;flex-shrink:0}
+  .ilbl{font-size:12px;color:var(--label);margin-bottom:3px}
+  .ival{font-weight:600}
+  .isub{font-size:12px;color:var(--muted);margin-top:2px}
+  /* customer info */
+  .custgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px 18px}
+  .field .flbl{font-size:12px;color:var(--label);margin-bottom:5px}
+  .field .fval{display:flex;align-items:center;gap:8px;font-weight:500}
+  .field .fval .fi{color:var(--muted)}
+  /* payment summary */
+  .col-r{width:310px;flex-shrink:0}
+  .psum{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px;position:sticky;top:20px}
+  .psum h2{margin:0 0 14px;font-size:15px;font-weight:700}
+  .prow{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:6px 0}
+  .prow .lbl{color:var(--muted)}
+  .prow .val{font-weight:600;font-variant-numeric:tabular-nums}
+  .deduct .val{color:var(--red)}
+  .hr{border:none;border-top:1px dashed var(--line);margin:11px 0}
+  .payout{background:#effbfc;border:1px solid #cfeef2;border-radius:10px;padding:11px 13px;margin:4px 0 2px}
+  .payout .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .payout .top .lbl{font-weight:700;font-size:13.5px}
+  .payout .top .val{font-weight:800;font-size:17px;color:var(--teal-d);font-variant-numeric:tabular-nums}
+  .payout .formula{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+  .prowdate{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:3px 0}
+  .prowdate .lbl{color:var(--muted)} .prowdate .val{font-weight:600}
+  .green{color:var(--green)} .red{color:var(--red)}
+  .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
+  .total .lbl{font-weight:700;font-size:15px} .total .val{font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+  .pstat{margin-top:16px;border:1px solid var(--line2);border-radius:11px;padding:13px}
+  .pstat .row1{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;margin-bottom:8px}
+  .pstat .note{font-size:11.5px;color:var(--muted);line-height:1.45}
+  @media(max-width:1100px){.content{flex-direction:column}.col-r{width:100%}.propgrid{grid-template-columns:1fr}.custgrid{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){.side{display:none}.custgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">STAY LUXE</div>
+    <nav class="nav">
+      <a><span class="ic">▦</span> Dashboard</a>
+      <a><span class="ic">🏢</span> Properties Management</a>
+      <a class="active"><span class="ic">📅</span> My Bookings</a>
+      <a><span class="ic">🗓</span> My Calendar</a>
+      <a><span class="ic">📊</span> My Report</a>
+      <a><span class="ic">💳</span> Transaction Management</a>
+      <a><span class="ic">💬</span> Chat</a>
+      <a><span class="ic">🔔</span> Notifications</a>
+      <a><span class="ic">👤</span> My Account</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="welcome">Welcome back!<span>Here's your property overview 👋</span></div>
+      <div class="tbright">
+        <span class="bell">🔔<b>3</b></span>
+        <span class="userpill"><span class="ava">SS</span> Sneha Shah ▾</span>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="crumb">Dashboard / Bookings / <b>Booking Details</b></div>
+
+      <div class="pghead">
+        <div>
+          <h1>Booking Details</h1>
+          <div class="bkline">BK-1785197395122 <span class="badge b-green">Confirmed</span></div>
+        </div>
+        <button class="btn">⤓ Export CSV</button>
+      </div>
+
+      <div class="content">
+        <div class="col-l">
+          <div class="card">
+            <h2>Property Information</h2>
+            <div class="body">
+              <div class="propgrid">
+                <div class="infobox">
+                  <div class="iico">🏠</div>
+                  <div><div class="ilbl">Property Name</div><div class="ival">The Limited Edition</div><div class="isub">Property ID: EDU128</div></div>
+                </div>
+                <div class="infobox">
+                  <div class="iico">📍</div>
+                  <div><div class="ilbl">Address</div><div class="ival">2 Churton, Clunes, Victoria (VIC) 1010</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Customer Information</h2>
+            <div class="body">
+              <div class="custgrid">
+                <div class="field"><div class="flbl">Guest Name</div><div class="fval"><span class="fi">👤</span> Dishita Dave</div></div>
+                <div class="field"><div class="flbl">No of Guests</div><div class="fval"><span class="fi">👥</span> 2 Guests</div></div>
+                <div class="field"><div class="flbl">Check-in</div><div class="fval"><span class="fi">📅</span> Aug 22, 2026 at 20:09</div></div>
+                <div class="field"><div class="flbl">Check-out</div><div class="fval"><span class="fi">📅</span> Aug 26, 2026 at 15:00</div></div>
+                <div class="field"><div class="flbl">Rooms Booked</div><div class="fval"><span class="fi">🛏</span> 8</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-r">
+          <div class="psum">
+            <h2>Payment Summary</h2>
+
+            <div class="prow"><span class="lbl">NZ$1,450.20 × 4 nights</span><span class="val">NZ$5,800.80</span></div>
+            <div class="prow"><span class="lbl">Cleaning Fee</span><span class="val">NZ$1,081.61</span></div>
+            <div class="prow deduct"><span class="lbl">Processing Fee</span><span class="val">−NZ$406.92</span></div>
+            <div class="prow deduct"><span class="lbl">Taxes (VIC Levy)</span><span class="val">−NZ$516.19</span></div>
+            <div class="prow deduct"><span class="lbl">Host Service Fee (15%)</span><span class="val">−NZ$870.12</span></div>
+
+            <div class="payout">
+              <div class="top"><span class="lbl">Total Host Payout</span><span class="val">NZ$5,089.18</span></div>
+            </div>
+
+            <hr class="hr">
+
+            <div class="prowdate"><span class="lbl">Partial Payment On</span><span class="val">Jul 28, 2026</span></div>
+            <div class="prowdate"><span class="lbl">Partial Payment</span><span class="val green">NZ$3,902.76</span></div>
+            <div class="prowdate" style="margin-top:8px"><span class="lbl">Final Payment Due On</span><span class="val">Aug 21, 2026</span></div>
+            <div class="prowdate"><span class="lbl">Remaining Balance</span><span class="val red">NZ$3,902.76</span></div>
+
+            <div class="total"><span class="lbl">Total Booking Amount</span><span class="val">NZ$7,805.52</span></div>
+
+            <div class="pstat">
+              <div class="row1">💳 Payment Status <span class="badge b-blue">Partial</span></div>
+              <div class="note">Payment details and sensitive information are not accessible for security purposes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
