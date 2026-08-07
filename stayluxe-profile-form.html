@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Profile — Stay Luxe</title>
+<style>
+  :root{
+    --navy-dark:#0b1f3a;
+    --navy-darker:#081729;
+    --accent:#18b7d6;
+    --border:#e2e6ea;
+    --input-bg:#eef1f4;
+    --text:#1f2937;
+    --muted:#8a94a3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--text);
+    background:#fff;
+  }
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:220px;
+    flex-shrink:0;
+    background:linear-gradient(180deg,var(--navy-dark),var(--navy-darker));
+    color:#cfd6e0;
+    padding:20px 0;
+  }
+  .logo{
+    font-weight:700;
+    letter-spacing:6px;
+    font-size:15px;
+    color:#fff;
+    padding:0 20px 24px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 20px;
+    font-size:14px;
+    cursor:default;
+    color:#cfd6e0;
+  }
+  .nav-item .icon{
+    width:16px;
+    display:inline-block;
+    text-align:center;
+    opacity:.8;
+  }
+  .nav-item.active{
+    background:var(--accent);
+    color:#fff;
+  }
+
+  /* Main */
+  .main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .tabs{
+    display:flex;
+    gap:28px;
+    padding:14px 32px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    color:#5b6472;
+  }
+  .tab{
+    padding-bottom:12px;
+    cursor:default;
+  }
+  .tab.active{
+    color:var(--accent);
+    border-bottom:2px solid var(--accent);
+    font-weight:600;
+  }
+
+  .content{
+    padding:28px 32px 40px;
+    max-width:1100px;
+  }
+
+  .profile-header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:28px;
+  }
+  .avatar-wrap{
+    position:relative;
+    width:56px;
+    height:56px;
+  }
+  .avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:#f0e6e6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    overflow:hidden;
+  }
+  .avatar-edit{
+    position:absolute;
+    bottom:-2px;
+    right:-2px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    border:2px solid #fff;
+  }
+  .profile-name{
+    font-size:17px;
+    font-weight:600;
+  }
+  .profile-joined{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:2px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 32px;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .field.full{
+    grid-column:1 / -1;
+  }
+  label{
+    font-size:13px;
+    font-weight:500;
+    color:#374151;
+  }
+  label .req{
+    color:#e0475c;
+    margin-left:2px;
+  }
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    background:var(--input-bg);
+    font-size:13px;
+    color:var(--text);
+    outline:none;
+  }
+  input:disabled{
+    color:#8a94a3;
+    cursor:not-allowed;
+  }
+  .phone-row{
+    display:flex;
+    gap:8px;
+  }
+  .phone-code{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0 10px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    background:var(--input-bg);
+    font-size:13px;
+    white-space:nowrap;
+  }
+  .phone-row input{
+    flex:1;
+  }
+  select{
+    appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,#8a94a3 50%),linear-gradient(135deg,#8a94a3 50%,transparent 50%);
+    background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px);
+    background-size:6px 6px,6px 6px;
+    background-repeat:no-repeat;
+  }
+
+  .section-title{
+    font-size:13px;
+    font-weight:500;
+    color:#374151;
+    margin:32px 0 12px;
+  }
+
+  .file-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .file-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 14px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    max-width:520px;
+  }
+  .file-icon{
+    width:28px;
+    height:28px;
+    border-radius:4px;
+    background:#eef1f4;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .file-info{
+    flex:1;
+    min-width:0;
+  }
+  .file-name{
+    font-size:13px;
+    font-weight:500;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .file-meta{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .file-actions{
+    display:flex;
+    gap:10px;
+    color:#8a94a3;
+    font-size:14px;
+  }
+
+  .dropzone{
+    border:1.5px dashed #b9d9e0;
+    border-radius:8px;
+    padding:32px;
+    text-align:center;
+    color:var(--accent);
+    font-size:13px;
+  }
+  .dropzone .upload-icon{
+    width:32px;
+    height:32px;
+    margin:0 auto 10px;
+    border:1.5px solid var(--accent);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .dropzone .hint{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+  }
+
+  .actions{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+  }
+  button{
+    font-size:13px;
+    font-weight:600;
+    padding:10px 22px;
+    border-radius:6px;
+    cursor:default;
+    border:1px solid var(--border);
+  }
+  .btn-cancel{
+    background:#fff;
+    color:#374151;
+  }
+  .btn-save{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+  }
+
+  .field-hint{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:2px;
+  }
+  .field-error{
+    font-size:11px;
+    color:#e0475c;
+    min-height:14px;
+    margin-top:2px;
+  }
+  input.invalid,
+  select.invalid{
+    border-color:#e0475c;
+    background:#fff5f5;
+  }
+  .checkbox-field{
+    flex-direction:row;
+    align-items:center;
+  }
+  .checkbox-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:500;
+    color:#374151;
+    cursor:pointer;
+  }
+  input[type=checkbox]{
+    width:16px;
+    height:16px;
+    accent-color:var(--accent);
+    cursor:pointer;
+  }
+
+  fieldset.bank-fieldset{
+    border:0;
+    margin:0;
+    padding:0;
+    display:contents;
+  }
+  .conditional-group{
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 32px;
+    overflow:hidden;
+    max-height:0;
+    opacity:0;
+    transition:max-height .35s ease, opacity .3s ease;
+  }
+  .conditional-group.open{
+    max-height:900px;
+    opacity:1;
+  }
+  .gst-number-field.gst-hidden{
+    display:none;
+  }
+
+  .save-status{
+    font-size:13px;
+    display:flex;
+    align-items:center;
+  }
+  .save-status.success{
+    color:#1a9c5c;
+  }
+  .save-status.error{
+    color:#e0475c;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">STAY LUXE</div>
+    <div class="nav-item"><span class="icon">▦</span> Dashboard</div>
+    <div class="nav-item"><span class="icon">🏠</span> Properties Management</div>
+    <div class="nav-item"><span class="icon">📅</span> My Bookings</div>
+    <div class="nav-item"><span class="icon">🗓</span> My Calendar</div>
+    <div class="nav-item"><span class="icon">📄</span> My Report</div>
+    <div class="nav-item"><span class="icon">💬</span> Chat</div>
+    <div class="nav-item"><span class="icon">🔔</span> Notifications</div>
+    <div class="nav-item active"><span class="icon">👤</span> My Account</div>
+  </div>
+
+  <div class="main">
+    <div class="tabs">
+      <div class="tab active">My Profile</div>
+      <div class="tab">My Earnings</div>
+      <div class="tab">Change Password</div>
+      <div class="tab">Contact Us</div>
+    </div>
+
+    <div class="content">
+      <div class="profile-header">
+        <div class="avatar-wrap">
+          <div class="avatar">🙂</div>
+          <div class="avatar-edit">✎</div>
+        </div>
+        <div>
+          <div class="profile-name">Sneha Shah</div>
+          <div class="profile-joined">Joined May 5, 2026</div>
+        </div>
+      </div>
+
+      <form id="profileForm" novalidate>
+      <div class="grid">
+        <div class="field">
+          <label>First Name<span class="req">*</span></label>
+          <input type="text" value="Sneha">
+        </div>
+        <div class="field">
+          <label>Last Name<span class="req">*</span></label>
+          <input type="text" value="Shah">
+        </div>
+
+        <div class="field">
+          <label>Email Address<span class="req">*</span></label>
+          <input type="email" value="sneha1@mailinator.com" disabled>
+        </div>
+        <div class="field">
+          <label>Phone Number<span class="req">*</span></label>
+          <div class="phone-row">
+            <div class="phone-code">🇪🇬 +20 ▾</div>
+            <input type="tel" value="345678905679">
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>What PMS do you use?</label>
+          <input type="text" placeholder="e.g. Hostaway, Guesty">
+        </div>
+
+        <div class="field full">
+          <label>Address<span class="req">*</span></label>
+          <input type="text" value="20 colonial">
+        </div>
+
+        <div class="field">
+          <label>Country<span class="req">*</span></label>
+          <select id="mailingCountry"><option>Canada</option></select>
+        </div>
+        <div class="field">
+          <label>State<span class="req">*</span></label>
+          <select><option>Alberta</option></select>
+        </div>
+
+        <div class="field">
+          <label>City/Suburb<span class="req">*</span></label>
+          <select><option>Athabasca</option></select>
+        </div>
+        <div class="field">
+          <label>Zip Code<span class="req">*</span></label>
+          <input type="text" value="345345">
+        </div>
+
+        <div class="field full">
+          <label>Bank Account Country<span class="req">*</span></label>
+          <select id="bankCountry" required>
+            <option value="NZ">New Zealand</option>
+            <option value="AU">Australia</option>
+            <option value="FJ">Fiji</option>
+          </select>
+          <div class="field-hint">Controls which tax and banking fields appear below. Defaults from your mailing address country, but can be changed.</div>
+        </div>
+
+        <div class="conditional-group open" id="nzGroupWrap">
+          <fieldset class="bank-fieldset" id="nzGroup">
+            <div class="field">
+              <label>IRD Number<span class="req" id="irdReqMark">*</span></label>
+              <input type="text" id="irdNumber" inputmode="numeric" maxlength="11" placeholder="XX-XXX-XXX" value="12-345-678" required>
+              <div class="field-hint">Not required if you're GST registered.</div>
+              <div class="field-error" id="err-irdNumber"></div>
+            </div>
+            <div class="field checkbox-field">
+              <label class="checkbox-label">
+                <input type="checkbox" id="gstRegistered" checked>
+                Are you GST registered?
+              </label>
+            </div>
+
+            <div class="field gst-number-field" id="gstNumberField">
+              <label>GST Number<span class="req">*</span></label>
+              <input type="text" id="gstNumber" inputmode="numeric" maxlength="11" placeholder="XX-XXX-XXX" value="12-345-678" required>
+              <div class="field-error" id="err-gstNumber"></div>
+            </div>
+            <div class="field">
+              <label>NZBN Number</label>
+              <input type="text" id="nzbnNumber" value="1234567890123">
+            </div>
+
+            <div class="field full">
+              <label>Account Holder Name<span class="req">*</span></label>
+              <input type="text" id="accountHolderNameNZ" value="Sneha Shah" required>
+              <div class="field-error" id="err-accountHolderNameNZ"></div>
+            </div>
+            <div class="field full">
+              <label>NZ Bank Account Number<span class="req">*</span></label>
+              <input type="text" id="nzBankAccount" placeholder="XX-XXXX-XXXXXXX-XXX" value="12-3456-7890123-000" required>
+              <div class="field-error" id="err-nzBankAccount"></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="conditional-group" id="auGroupWrap">
+          <fieldset class="bank-fieldset" id="auGroup" disabled>
+            <div class="field">
+              <label>ABN Number<span class="req">*</span></label>
+              <input type="text" id="abnNumber" inputmode="numeric" maxlength="11" value="12345678910" required>
+              <div class="field-error" id="err-abnNumber"></div>
+            </div>
+            <div class="field">
+              <label>Account Holder Name<span class="req">*</span></label>
+              <input type="text" id="accountHolderNameAU" value="Sneha Shah" required>
+              <div class="field-error" id="err-accountHolderNameAU"></div>
+            </div>
+
+            <div class="field">
+              <label>BSB Number<span class="req">*</span></label>
+              <input type="text" id="bsbNumber" placeholder="XXX-XXX" value="062-000" required>
+              <div class="field-error" id="err-bsbNumber"></div>
+            </div>
+            <div class="field">
+              <label>Account Number<span class="req">*</span></label>
+              <input type="text" id="auAccountNumber" inputmode="numeric" maxlength="9" value="123456789" required>
+              <div class="field-error" id="err-auAccountNumber"></div>
+            </div>
+            <div class="field">
+              <label>SWIFT/BIC Code<span class="req">*</span></label>
+              <input type="text" id="swiftCode" maxlength="11" value="ANZBAU3M" style="text-transform:uppercase;" required>
+              <div class="field-error" id="err-swiftCode"></div>
+            </div>
+
+            <div class="field">
+              <label>Bank Name<span class="req">*</span></label>
+              <input type="text" id="bankName" value="ANZ Bank" required>
+              <div class="field-error" id="err-bankName"></div>
+            </div>
+            <div class="field">
+              <label>Bank Branch Address<span class="req">*</span></label>
+              <input type="text" id="bankBranchAddress" value="Level 1, 123 Queen St, Melbourne VIC 3000" required>
+              <div class="field-error" id="err-bankBranchAddress"></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="conditional-group" id="fjGroupWrap">
+          <fieldset class="bank-fieldset" id="fjGroup" disabled>
+            <div class="field">
+              <label>Bank Account Number<span class="req">*</span></label>
+              <input type="text" id="fjBankAccount" value="9876543210" required>
+              <div class="field-error" id="err-fjBankAccount"></div>
+            </div>
+            <div class="field">
+              <label>SWIFT/BIC Code<span class="req">*</span></label>
+              <input type="text" id="fjSwiftCode" maxlength="11" value="BSPBFJFJ" style="text-transform:uppercase;" required>
+              <div class="field-error" id="err-fjSwiftCode"></div>
+            </div>
+
+            <div class="field">
+              <label>Bank Name<span class="req">*</span></label>
+              <input type="text" id="fjBankName" value="Bank South Pacific" required>
+              <div class="field-error" id="err-fjBankName"></div>
+            </div>
+            <div class="field">
+              <label>Bank Branch<span class="req">*</span></label>
+              <input type="text" id="fjBankBranch" value="Suva City Branch" required>
+              <div class="field-error" id="err-fjBankBranch"></div>
+            </div>
+
+            <div class="field full">
+              <label>TIN Number<span class="req">*</span></label>
+              <input type="text" id="fjTinNumber" value="1234567890" required>
+              <div class="field-error" id="err-fjTinNumber"></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="field">
+          <label>Currency to be Paid In<span class="req">*</span></label>
+          <select><option>NZ$ NZD — New Zealand Dollar</option></select>
+        </div>
+        <div class="field"></div>
+      </div>
+
+      <div class="section-title">Host Name And ID Proof</div>
+      <div class="file-list">
+        <div class="file-row">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <div class="file-name">Accounting-Outsourcing-Services-Trends...</div>
+            <div class="file-meta">PDF • May 09, 2026</div>
+          </div>
+          <div class="file-actions"><span>⬇</span><span>🗑</span></div>
+        </div>
+        <div class="file-row">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <div class="file-name">9mb.pdf</div>
+            <div class="file-meta">PDF • May 20, 2026</div>
+          </div>
+          <div class="file-actions"><span>⬇</span><span>🗑</span></div>
+        </div>
+        <div class="file-row">
+          <div class="file-icon">🖼</div>
+          <div class="file-info">
+            <div class="file-name">artificial_intelligent_certificate_17784916...</div>
+            <div class="file-meta">PNG • May 25, 2026</div>
+          </div>
+          <div class="file-actions"><span>⬇</span><span>🗑</span></div>
+        </div>
+      </div>
+
+      <div class="dropzone">
+        <div class="upload-icon">↑</div>
+        Drag and drop files here or click to upload
+        <div class="hint">PDF or Images (JPG, PNG, SVG) — Max 5MB</div>
+      </div>
+
+      <div class="actions">
+        <button type="reset" class="btn-cancel">Cancel</button>
+        <button type="submit" class="btn-save">Save Changes</button>
+        <div class="save-status" id="saveStatus"></div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const bankCountrySelect = document.getElementById('bankCountry');
+  const mailingCountrySelect = document.getElementById('mailingCountry');
+  const GROUPS = {
+    NZ: { wrap: document.getElementById('nzGroupWrap'), fieldset: document.getElementById('nzGroup') },
+    AU: { wrap: document.getElementById('auGroupWrap'), fieldset: document.getElementById('auGroup') },
+    FJ: { wrap: document.getElementById('fjGroupWrap'), fieldset: document.getElementById('fjGroup') }
+  };
+  const gstCheckbox = document.getElementById('gstRegistered');
+  const gstNumberField = document.getElementById('gstNumberField');
+  const gstNumberInput = document.getElementById('gstNumber');
+  const form = document.getElementById('profileForm');
+  const saveStatus = document.getElementById('saveStatus');
+
+  let bankCountryTouched = false;
+
+  function onlyDigits(str){ return str.replace(/\D/g, ''); }
+
+  function groupDigits(digits, groups){
+    const out = [];
+    let i = 0;
+    groups.forEach(g => { out.push(digits.slice(i, i + g)); i += g; });
+    return out.filter(Boolean).join('-');
+  }
+
+  function maskNZBank(e){ e.target.value = groupDigits(onlyDigits(e.target.value).slice(0, 16), [2, 4, 7, 3]); }
+  function maskBSB(e){ e.target.value = groupDigits(onlyDigits(e.target.value).slice(0, 6), [3, 3]); }
+  function maskDigits(maxLen){ return e => { e.target.value = onlyDigits(e.target.value).slice(0, maxLen); }; }
+  function maskSwift(e){ e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 11); }
+  function maskIRDStyle(e){
+    const digits = onlyDigits(e.target.value).slice(0, 9);
+    const groups = digits.length <= 8 ? [2, 3, 3] : [3, 3, 3];
+    e.target.value = groupDigits(digits, groups);
+  }
+
+  document.getElementById('nzBankAccount').addEventListener('input', maskNZBank);
+  document.getElementById('bsbNumber').addEventListener('input', maskBSB);
+  document.getElementById('irdNumber').addEventListener('input', maskIRDStyle);
+  document.getElementById('gstNumber').addEventListener('input', maskIRDStyle);
+  document.getElementById('abnNumber').addEventListener('input', maskDigits(11));
+  document.getElementById('auAccountNumber').addEventListener('input', maskDigits(9));
+  document.getElementById('swiftCode').addEventListener('input', maskSwift);
+  document.getElementById('fjSwiftCode').addEventListener('input', maskSwift);
+
+  const VALIDATORS = {
+    irdNumber: v => /^\d{8,9}$/.test(onlyDigits(v)),
+    gstNumber: v => /^\d{8,9}$/.test(onlyDigits(v)),
+    nzBankAccount: v => /^\d{2}-\d{4}-\d{7}-\d{3}$/.test(v),
+    abnNumber: v => /^\d{11}$/.test(v),
+    bsbNumber: v => /^\d{3}-\d{3}$/.test(v),
+    auAccountNumber: v => /^\d{6,9}$/.test(v),
+    swiftCode: v => /^[A-Z0-9]{8}$|^[A-Z0-9]{11}$/.test(v),
+    fjSwiftCode: v => /^[A-Z0-9]{8}$|^[A-Z0-9]{11}$/.test(v)
+  };
+  const MESSAGES = {
+    irdNumber: 'IRD number must be 8 or 9 digits (e.g. XX-XXX-XXX).',
+    gstNumber: 'GST number must be 8 or 9 digits (e.g. XX-XXX-XXX).',
+    nzBankAccount: 'Format must be XX-XXXX-XXXXXXX-XXX.',
+    abnNumber: 'ABN must be exactly 11 digits.',
+    bsbNumber: 'BSB must be formatted XXX-XXX.',
+    auAccountNumber: 'Account number must be 6 to 9 digits.',
+    swiftCode: 'SWIFT/BIC must be 8 or 11 alphanumeric characters.',
+    fjSwiftCode: 'SWIFT/BIC must be 8 or 11 alphanumeric characters.'
+  };
+
+  function setError(id, msg){
+    const errEl = document.getElementById('err-' + id);
+    const inputEl = document.getElementById(id);
+    if (errEl) errEl.textContent = msg || '';
+    if (inputEl) inputEl.classList.toggle('invalid', !!msg);
+  }
+
+  function validateField(id){
+    const el = document.getElementById(id);
+    if (!el || el.disabled) { setError(id, ''); return true; }
+    const value = el.value.trim();
+    if (el.hasAttribute('required') && !value) { setError(id, 'This field is required.'); return false; }
+    if (value && VALIDATORS[id] && !VALIDATORS[id](value)) { setError(id, MESSAGES[id]); return false; }
+    setError(id, '');
+    return true;
+  }
+
+  ['accountHolderNameNZ', 'accountHolderNameAU', 'fjBankAccount', 'fjBankName', 'fjBankBranch', 'fjTinNumber', ...Object.keys(VALIDATORS)].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('blur', () => validateField(id));
+  });
+
+  function clearGroupErrors(fieldsetEl){
+    fieldsetEl.querySelectorAll('input').forEach(el => { el.classList.remove('invalid'); });
+    fieldsetEl.querySelectorAll('.field-error').forEach(el => { el.textContent = ''; });
+  }
+
+  function resetGroup(fieldsetEl){
+    fieldsetEl.querySelectorAll('input').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+    clearGroupErrors(fieldsetEl);
+  }
+
+  function syncGstField(){
+    const checked = gstCheckbox.checked;
+    gstNumberField.classList.toggle('gst-hidden', !checked);
+    gstNumberInput.disabled = !checked;
+    gstNumberInput.required = checked;
+    if (!checked) { gstNumberInput.value = ''; setError('gstNumber', ''); }
+
+    const irdInput = document.getElementById('irdNumber');
+    irdInput.required = !checked;
+    document.getElementById('irdReqMark').style.visibility = checked ? 'hidden' : 'visible';
+    validateField('irdNumber');
+  }
+  gstCheckbox.addEventListener('change', syncGstField);
+
+  function setBankCountry(country){
+    Object.keys(GROUPS).forEach(key => {
+      const isActive = key === country;
+      GROUPS[key].wrap.classList.toggle('open', isActive);
+      GROUPS[key].fieldset.disabled = !isActive;
+    });
+    if (country === 'NZ') syncGstField();
+    saveStatus.textContent = '';
+    saveStatus.className = 'save-status';
+  }
+
+  bankCountrySelect.addEventListener('change', () => {
+    bankCountryTouched = true;
+    const next = bankCountrySelect.value;
+    Object.keys(GROUPS).forEach(key => { if (key !== next) resetGroup(GROUPS[key].fieldset); });
+    setBankCountry(next);
+  });
+
+  if (mailingCountrySelect) {
+    mailingCountrySelect.addEventListener('change', () => {
+      if (bankCountryTouched) return;
+      const text = (mailingCountrySelect.selectedOptions[0] || {}).text || '';
+      if (/new zealand/i.test(text)) bankCountrySelect.value = 'NZ';
+      else if (/australia/i.test(text)) bankCountrySelect.value = 'AU';
+      else if (/fiji/i.test(text)) bankCountrySelect.value = 'FJ';
+      else return;
+      setBankCountry(bankCountrySelect.value);
+    });
+  }
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      bankCountryTouched = false;
+      setBankCountry(bankCountrySelect.value);
+      gstCheckbox.checked = true;
+      syncGstField();
+      Object.keys(VALIDATORS).forEach(id => setError(id, ''));
+      saveStatus.textContent = '';
+      saveStatus.className = 'save-status';
+    }, 0);
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const ACTIVE_IDS_BY_COUNTRY = {
+      NZ: ['accountHolderNameNZ', 'irdNumber', 'gstNumber', 'nzBankAccount'],
+      AU: ['accountHolderNameAU', 'abnNumber', 'bsbNumber', 'auAccountNumber', 'swiftCode', 'bankName', 'bankBranchAddress'],
+      FJ: ['fjBankAccount', 'fjSwiftCode', 'fjBankName', 'fjBankBranch', 'fjTinNumber']
+    };
+    const activeIds = ACTIVE_IDS_BY_COUNTRY[bankCountrySelect.value] || [];
+    let allValid = true;
+    let firstInvalidEl = null;
+    activeIds.forEach(id => {
+      const ok = validateField(id);
+      if (!ok) {
+        allValid = false;
+        if (!firstInvalidEl) firstInvalidEl = document.getElementById(id);
+      }
+    });
+    if (allValid) {
+      saveStatus.textContent = 'Changes saved.';
+      saveStatus.className = 'save-status success';
+    } else {
+      saveStatus.textContent = 'Please fix the highlighted fields before saving.';
+      saveStatus.className = 'save-status error';
+      if (firstInvalidEl) firstInvalidEl.focus();
+    }
+  });
+
+  // initial state
+  setBankCountry(bankCountrySelect.value);
+  syncGstField();
+})();
+</script>
+</body>
+</html>
