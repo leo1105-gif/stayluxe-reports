@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StayLuxe Bedroom and Bathroom UX Redesign</title>
+  <style>
+    :root {
+      --sl-navy: #062f3d;
+      --sl-blue: #10add1;
+      --sl-blue-dark: #087f9f;
+      --sl-blue-soft: #eefaff;
+      --sl-blue-soft-2: #f7fcfe;
+      --sl-blue-border: #9bd8e8;
+      --sl-text: #17242b;
+      --sl-muted: #63747d;
+      --sl-border: #dce7eb;
+      --sl-surface: #ffffff;
+      --sl-background: #f4f7f8;
+      --sl-danger: #c63b3b;
+      --sl-shadow: 0 8px 24px rgba(6, 47, 61, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--sl-background);
+      color: var(--sl-text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    button, input, select { font: inherit; }
+    button, select, input[type="checkbox"] { cursor: pointer; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(16, 173, 209, 0.28);
+      outline-offset: 2px;
+    }
+
+    .sl-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 28px auto 60px;
+    }
+
+    .sl-page-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .sl-eyebrow {
+      margin: 0 0 4px;
+      color: var(--sl-blue-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 6px; font-size: clamp(24px, 3vw, 34px); line-height: 1.2; }
+    h2 { margin-bottom: 5px; font-size: 22px; }
+    h3 { margin-bottom: 3px; font-size: 18px; }
+
+    .sl-subtitle,
+    .sl-section-copy,
+    .sl-room-copy,
+    .sl-field-hint {
+      color: var(--sl-muted);
+    }
+
+    .sl-subtitle { margin-bottom: 0; }
+
+    .sl-step-badge {
+      flex: none;
+      padding: 9px 13px;
+      border: 1px solid var(--sl-blue-border);
+      border-radius: 999px;
+      background: var(--sl-blue-soft);
+      color: var(--sl-blue-dark);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .sl-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px 18px;
+      border: 1px solid var(--sl-border);
+      border-radius: 12px;
+      background: var(--sl-surface);
+      box-shadow: var(--sl-shadow);
+    }
+
+    .sl-summary strong { display: block; margin-bottom: 2px; }
+
+    .sl-summary-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sl-summary-pill {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--sl-blue-soft);
+      color: var(--sl-blue-dark);
+      font-weight: 700;
+    }
+
+    .sl-panel {
+      margin-bottom: 28px;
+      padding: 24px;
+      border: 1px solid var(--sl-border);
+      border-radius: 14px;
+      background: var(--sl-surface);
+      box-shadow: var(--sl-shadow);
+    }
+
+    .sl-section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .sl-section-copy { margin-bottom: 0; }
+
+    .sl-primary,
+    .sl-secondary,
+    .sl-quiet,
+    .sl-danger,
+    .sl-stepper button {
+      min-height: 42px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .sl-primary {
+      padding: 10px 16px;
+      border: 1px solid var(--sl-blue);
+      background: var(--sl-blue);
+      color: #fff;
+    }
+
+    .sl-primary:hover { background: var(--sl-blue-dark); border-color: var(--sl-blue-dark); }
+
+    .sl-secondary {
+      padding: 10px 15px;
+      border: 1px solid var(--sl-blue);
+      background: #fff;
+      color: var(--sl-blue-dark);
+    }
+
+    .sl-secondary:hover { background: var(--sl-blue-soft); }
+
+    .sl-quiet,
+    .sl-danger {
+      min-height: 36px;
+      padding: 7px 10px;
+      background: transparent;
+    }
+
+    .sl-quiet { border: 1px solid var(--sl-border); color: var(--sl-muted); }
+    .sl-danger { border: 1px solid #efb5b5; color: var(--sl-danger); }
+    .sl-danger:hover { background: #fff4f4; }
+
+    .sl-room-list { display: grid; gap: 18px; }
+
+    .sl-room-card {
+      overflow: hidden;
+      border: 1px solid var(--sl-blue-border);
+      border-top: 5px solid var(--sl-blue);
+      border-radius: 12px;
+      background: var(--sl-blue-soft-2);
+    }
+
+    .sl-room-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 17px 18px;
+      background: var(--sl-blue-soft);
+      border-bottom: 1px solid var(--sl-blue-border);
+    }
+
+    .sl-room-title-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+    }
+
+    .sl-room-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 10px;
+      background: #d5f2f9;
+      font-size: 20px;
+    }
+
+    .sl-room-copy { margin-bottom: 0; font-size: 13px; }
+
+    .sl-room-meta {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #d7f3f9;
+      color: var(--sl-blue-dark);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .sl-room-body { padding: 18px; }
+
+    .sl-inline-label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .sl-room-name {
+      width: min(420px, 100%);
+      min-height: 42px;
+      margin-bottom: 18px;
+      padding: 9px 11px;
+      border: 1px solid var(--sl-border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--sl-text);
+    }
+
+    .sl-bed-list { display: grid; gap: 10px; }
+
+    .sl-bed-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) 160px auto;
+      align-items: end;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--sl-border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .sl-field label,
+    .sl-field-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .sl-select {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 34px 9px 11px;
+      border: 1px solid var(--sl-border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--sl-text);
+    }
+
+    .sl-stepper {
+      display: grid;
+      grid-template-columns: 42px minmax(42px, 1fr) 42px;
+      align-items: center;
+      min-height: 42px;
+      border: 1px solid var(--sl-border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .sl-stepper button {
+      min-height: 40px;
+      border: 0;
+      background: transparent;
+      color: var(--sl-blue-dark);
+      font-size: 20px;
+    }
+
+    .sl-stepper output { text-align: center; font-weight: 700; }
+
+    .sl-bed-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .sl-bed-actions p { margin: 0; color: var(--sl-muted); font-size: 12px; }
+
+    .sl-bath-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .sl-check {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--sl-border);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .sl-check input { width: 18px; height: 18px; accent-color: var(--sl-blue); }
+
+    .sl-bath-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .sl-ensuite-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      margin-top: 23px;
+    }
+
+    .sl-ensuite-row input { width: 19px; height: 19px; accent-color: var(--sl-blue); }
+
+    .sl-page-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .sl-toast {
+      margin-top: 12px;
+      color: var(--sl-blue-dark);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    @media (max-width: 780px) {
+      .sl-shell { width: min(100% - 20px, 1180px); margin-top: 16px; }
+      .sl-page-head,
+      .sl-section-head,
+      .sl-summary,
+      .sl-room-header,
+      .sl-bed-actions { align-items: stretch; flex-direction: column; }
+      .sl-section-head .sl-primary { width: 100%; }
+      .sl-bed-row { grid-template-columns: 1fr; }
+      .sl-bed-row .sl-danger { width: 100%; }
+      .sl-bath-fields,
+      .sl-bath-grid { grid-template-columns: 1fr; }
+      .sl-ensuite-row { margin-top: 0; }
+      .sl-panel { padding: 16px; }
+      .sl-page-actions { flex-direction: column-reverse; }
+      .sl-page-actions button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sl-shell" id="stayluxeRoomPrototype">
+    <header class="sl-page-head">
+      <div>
+        <p class="sl-eyebrow">Add New Property</p>
+        <h1>Property details</h1>
+        <p class="sl-subtitle">Add each room first, then describe what is inside that room.</p>
+      </div>
+      <span class="sl-step-badge">Step 2 of 9</span>
+    </header>
+
+    <section class="sl-summary" aria-live="polite">
+      <div>
+        <strong>Property room summary</strong>
+        <span class="sl-field-hint">Updates automatically as rooms and beds are added.</span>
+      </div>
+      <div class="sl-summary-values" id="summaryValues"></div>
+    </section>
+
+    <section class="sl-panel" aria-labelledby="bedroomsTitle">
+      <div class="sl-section-head">
+        <div>
+          <h2 id="bedroomsTitle">Bedrooms and beds</h2>
+          <p class="sl-section-copy">Create one blue card for each separate bedroom. Add the beds inside the correct bedroom card.</p>
+        </div>
+        <button class="sl-primary" type="button" id="addBedroom">+ Add another bedroom</button>
+      </div>
+      <div class="sl-room-list" id="bedroomList"></div>
+    </section>
+
+    <section class="sl-panel" aria-labelledby="bathroomsTitle">
+      <div class="sl-section-head">
+        <div>
+          <h2 id="bathroomsTitle">Bathrooms</h2>
+          <p class="sl-section-copy">Create one blue card for each separate bathroom, then select the facilities inside it.</p>
+        </div>
+        <button class="sl-primary" type="button" id="addBathroom">+ Add another bathroom</button>
+      </div>
+      <div class="sl-room-list" id="bathroomList"></div>
+    </section>
+
+    <div class="sl-page-actions">
+      <button class="sl-secondary" type="button">Previous</button>
+      <button class="sl-primary" type="button" id="saveNext">Save &amp; Next</button>
+    </div>
+    <div class="sl-toast" id="prototypeNotice" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    (() => {
+      const bedTypes = ['Single', 'King Single', 'Double', 'Queen', 'King', 'Super King', 'Bunk Bed', 'Sofa Bed'];
+      const bedCapacity = { Single: 1, 'King Single': 1, Double: 2, Queen: 2, King: 2, 'Super King': 2, 'Bunk Bed': 2, 'Sofa Bed': 2 };
+      const features = ['Toilet', 'Walk-in shower', 'Shower over bath', 'Bathtub', 'Double vanity', 'Bidet'];
+      let nextBedroomId = 3;
+      let nextBathroomId = 3;
+      let nextBedId = 5;
+
+      const state = {
+        bedrooms: [
+          { id: 1, name: 'Master bedroom', beds: [{ id: 1, type: 'King', qty: 1 }, { id: 2, type: 'Single', qty: 1 }] },
+          { id: 2, name: 'Bedroom 2', beds: [{ id: 3, type: 'Queen', qty: 1 }] }
+        ],
+        bathrooms: [
+          { id: 1, type: 'Full bathroom', ensuite: true, connectedTo: 1, features: ['Toilet', 'Walk-in shower', 'Double vanity'] },
+          { id: 2, type: 'Full bathroom', ensuite: false, connectedTo: '', features: ['Toilet', 'Bathtub', 'Shower over bath'] }
+        ]
+      };
+
+      const bedroomsEl = document.getElementById('bedroomList');
+      const bathroomsEl = document.getElementById('bathroomList');
+      const summaryEl = document.getElementById('summaryValues');
+
+      const esc = value => String(value).replace(/[&<>"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
+      const plural = (count, one, many = `${one}s`) => `${count} ${count === 1 ? one : many}`;
+
+      function renderSummary() {
+        const bedCount = state.bedrooms.reduce((total, room) => total + room.beds.reduce((sum, bed) => sum + bed.qty, 0), 0);
+        const guestCount = state.bedrooms.reduce((total, room) => total + room.beds.reduce((sum, bed) => sum + (bedCapacity[bed.type] || 1) * bed.qty, 0), 0);
+        summaryEl.innerHTML = [
+          plural(state.bedrooms.length, 'bedroom'),
+          plural(bedCount, 'bed'),
+          `Sleeps ${guestCount}`,
+          plural(state.bathrooms.length, 'bathroom')
+        ].map(item => `<span class="sl-summary-pill">${item}</span>`).join('');
+      }
+
+      function bedOptions(selected) {
+        return bedTypes.map(type => `<option value="${type}" ${type === selected ? 'selected' : ''}>${type}</option>`).join('');
+      }
+
+      function bedroomOptions(selected) {
+        return state.bedrooms.map((room, index) => `<option value="${room.id}" ${Number(selected) === room.id ? 'selected' : ''}>${esc(room.name || `Bedroom ${index + 1}`)}</option>`).join('');
+      }
+
+      function renderBedrooms() {
+        bedroomsEl.innerHTML = state.bedrooms.map((room, roomIndex) => {
+          const bedCount = room.beds.reduce((sum, bed) => sum + bed.qty, 0);
+          const sleeps = room.beds.reduce((sum, bed) => sum + (bedCapacity[bed.type] || 1) * bed.qty, 0);
+          return `
+            <article class="sl-room-card" data-bedroom-id="${room.id}">
+              <header class="sl-room-header">
+                <div class="sl-room-title-wrap">
+                  <span class="sl-room-icon" aria-hidden="true">🛏️</span>
+                  <div>
+                    <h3>Bedroom ${roomIndex + 1}</h3>
+                    <p class="sl-room-copy">Beds added below belong only to this bedroom.</p>
+                    <span class="sl-room-meta">${plural(bedCount, 'bed')} · Sleeps ${sleeps}</span>
+                  </div>
+                </div>
+                ${state.bedrooms.length > 1 ? `<button class="sl-danger" type="button" data-action="remove-bedroom">Remove bedroom</button>` : ''}
+              </header>
+              <div class="sl-room-body">
+                <label class="sl-inline-label" for="bedroom-name-${room.id}">Bedroom name (optional)</label>
+                <input class="sl-room-name" id="bedroom-name-${room.id}" data-action="rename-bedroom" value="${esc(room.name)}" placeholder="e.g. Master bedroom">
+                <div class="sl-bed-list">
+                  ${room.beds.map((bed, bedIndex) => `
+                    <div class="sl-bed-row" data-bed-id="${bed.id}">
+                      <div class="sl-field">
+                        <label for="bed-type-${bed.id}">Bed ${bedIndex + 1} type</label>
+                        <select class="sl-select" id="bed-type-${bed.id}" data-action="bed-type">${bedOptions(bed.type)}</select>
+                      </div>
+                      <div>
+                        <span class="sl-field-label">Number of this bed</span>
+                        <div class="sl-stepper">
+                          <button type="button" data-action="decrease-bed" aria-label="Decrease number of ${esc(bed.type)} beds">−</button>
+                          <output>${bed.qty}</output>
+                          <button type="button" data-action="increase-bed" aria-label="Increase number of ${esc(bed.type)} beds">+</button>
+                        </div>
+                      </div>
+                      ${room.beds.length > 1 ? `<button class="sl-danger" type="button" data-action="remove-bed">Remove this bed</button>` : ''}
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="sl-bed-actions">
+                  <button class="sl-secondary" type="button" data-action="add-bed">+ Add another bed to Bedroom ${roomIndex + 1}</button>
+                  <p>Use this only when this same bedroom contains another bed.</p>
+                </div>
+              </div>
+            </article>`;
+        }).join('');
+      }
+
+      function renderBathrooms() {
+        bathroomsEl.innerHTML = state.bathrooms.map((bathroom, index) => `
+          <article class="sl-room-card" data-bathroom-id="${bathroom.id}">
+            <header class="sl-room-header">
+              <div class="sl-room-title-wrap">
+                <span class="sl-room-icon" aria-hidden="true">🚿</span>
+                <div>
+                  <h3>Bathroom ${index + 1}</h3>
+                  <p class="sl-room-copy">Select the facilities found inside this bathroom.</p>
+                  <span class="sl-room-meta">${esc(bathroom.type)}${bathroom.ensuite ? ' · Ensuite' : ''}</span>
+                </div>
+              </div>
+              ${state.bathrooms.length > 1 ? `<button class="sl-danger" type="button" data-action="remove-bathroom">Remove bathroom</button>` : ''}
+            </header>
+            <div class="sl-room-body">
+              <div class="sl-bath-fields">
+                <div class="sl-field">
+                  <label for="bath-type-${bathroom.id}">Bathroom type</label>
+                  <select class="sl-select" id="bath-type-${bathroom.id}" data-action="bath-type">
+                    ${['Full bathroom', 'Half bathroom', 'Powder room', 'Separate toilet'].map(type => `<option ${type === bathroom.type ? 'selected' : ''}>${type}</option>`).join('')}
+                  </select>
+                </div>
+                <label class="sl-ensuite-row">
+                  <input type="checkbox" data-action="toggle-ensuite" ${bathroom.ensuite ? 'checked' : ''}>
+                  <span><strong>This is an ensuite</strong><br><span class="sl-field-hint">Connected directly to a bedroom</span></span>
+                </label>
+              </div>
+              ${bathroom.ensuite ? `
+                <div class="sl-field" style="margin-top:14px; max-width:420px">
+                  <label for="connected-room-${bathroom.id}">Which bedroom is it connected to?</label>
+                  <select class="sl-select" id="connected-room-${bathroom.id}" data-action="connected-bedroom">${bedroomOptions(bathroom.connectedTo)}</select>
+                </div>` : ''}
+              <span class="sl-inline-label" style="margin-top:18px">Facilities in Bathroom ${index + 1}</span>
+              <div class="sl-bath-grid">
+                ${features.map(feature => `
+                  <label class="sl-check">
+                    <input type="checkbox" data-action="toggle-feature" value="${feature}" ${bathroom.features.includes(feature) ? 'checked' : ''}>
+                    <span>${feature}</span>
+                  </label>`).join('')}
+              </div>
+            </div>
+          </article>`).join('');
+      }
+
+      function render() {
+        renderBedrooms();
+        renderBathrooms();
+        renderSummary();
+      }
+
+      document.getElementById('addBedroom').addEventListener('click', () => {
+        state.bedrooms.push({ id: nextBedroomId++, name: `Bedroom ${state.bedrooms.length + 1}`, beds: [{ id: nextBedId++, type: 'Queen', qty: 1 }] });
+        render();
+      });
+
+      document.getElementById('addBathroom').addEventListener('click', () => {
+        state.bathrooms.push({ id: nextBathroomId++, type: 'Full bathroom', ensuite: false, connectedTo: '', features: ['Toilet'] });
+        render();
+      });
+
+      bedroomsEl.addEventListener('click', event => {
+        const action = event.target.dataset.action;
+        if (!action) return;
+        const card = event.target.closest('[data-bedroom-id]');
+        const room = state.bedrooms.find(item => item.id === Number(card.dataset.bedroomId));
+        const bedRow = event.target.closest('[data-bed-id]');
+        const bed = bedRow ? room.beds.find(item => item.id === Number(bedRow.dataset.bedId)) : null;
+
+        if (action === 'add-bed') room.beds.push({ id: nextBedId++, type: 'Single', qty: 1 });
+        if (action === 'remove-bedroom') state.bedrooms = state.bedrooms.filter(item => item.id !== room.id);
+        if (action === 'remove-bed') room.beds = room.beds.filter(item => item.id !== bed.id);
+        if (action === 'increase-bed') bed.qty += 1;
+        if (action === 'decrease-bed') bed.qty = Math.max(1, bed.qty - 1);
+        render();
+      });
+
+      bedroomsEl.addEventListener('change', event => {
+        const card = event.target.closest('[data-bedroom-id]');
+        if (!card) return;
+        const room = state.bedrooms.find(item => item.id === Number(card.dataset.bedroomId));
+        if (event.target.dataset.action === 'bed-type') {
+          const bedRow = event.target.closest('[data-bed-id]');
+          const bed = room.beds.find(item => item.id === Number(bedRow.dataset.bedId));
+          bed.type = event.target.value;
+          render();
+        }
+      });
+
+      bedroomsEl.addEventListener('input', event => {
+        if (event.target.dataset.action !== 'rename-bedroom') return;
+        const card = event.target.closest('[data-bedroom-id]');
+        const room = state.bedrooms.find(item => item.id === Number(card.dataset.bedroomId));
+        room.name = event.target.value;
+        renderSummary();
+      });
+
+      bathroomsEl.addEventListener('click', event => {
+        if (event.target.dataset.action !== 'remove-bathroom') return;
+        const card = event.target.closest('[data-bathroom-id]');
+        state.bathrooms = state.bathrooms.filter(item => item.id !== Number(card.dataset.bathroomId));
+        render();
+      });
+
+      bathroomsEl.addEventListener('change', event => {
+        const card = event.target.closest('[data-bathroom-id]');
+        if (!card) return;
+        const bathroom = state.bathrooms.find(item => item.id === Number(card.dataset.bathroomId));
+        const action = event.target.dataset.action;
+        if (action === 'bath-type') bathroom.type = event.target.value;
+        if (action === 'toggle-ensuite') {
+          bathroom.ensuite = event.target.checked;
+          bathroom.connectedTo = bathroom.ensuite ? (bathroom.connectedTo || state.bedrooms[0].id) : '';
+        }
+        if (action === 'connected-bedroom') bathroom.connectedTo = Number(event.target.value);
+        if (action === 'toggle-feature') {
+          bathroom.features = event.target.checked
+            ? [...new Set([...bathroom.features, event.target.value])]
+            : bathroom.features.filter(item => item !== event.target.value);
+        }
+        render();
+      });
+
+      document.getElementById('saveNext').addEventListener('click', () => {
+        const notice = document.getElementById('prototypeNotice');
+        notice.textContent = 'Prototype saved — the room structure is clear and ready for the next step.';
+        setTimeout(() => { notice.textContent = ''; }, 3500);
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
