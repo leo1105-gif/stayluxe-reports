@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stay Luxe — Guest booking details</title>
+  <meta name="description" content="Stay Luxe guest booking details prototype">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #151615;
+      --muted: #68706d;
+      --line: #e4e6e3;
+      --surface: #ffffff;
+      --soft: #f6f6f4;
+      --accent: #df7b12;
+      --accent-dark: #bf6208;
+      --accent-soft: #fff4e7;
+      --success: #276b4e;
+      --danger: #b13b30;
+      --shadow: 0 28px 90px rgba(18, 21, 19, .24);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      background: #eceeeb;
+      font-family: "DM Sans", Arial, sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .serif { font-family: "Playfair Display", Georgia, serif; }
+
+    .page {
+      height: 100vh;
+      overflow: hidden;
+      background: #f8f8f6;
+    }
+
+    .site-header {
+      height: 72px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 5vw;
+      border-bottom: 1px solid #dddeda;
+      background: rgba(255,255,255,.96);
+    }
+
+    .header-side { display: flex; align-items: center; gap: 12px; }
+    .header-side:last-child { justify-content: flex-end; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 38px;
+      padding: 0 16px;
+      border: 1px solid #d9dbd8;
+      border-radius: 999px;
+      color: #2a2d2b;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .brand {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 23px;
+      letter-spacing: .52em;
+      margin-right: -.52em;
+      white-space: nowrap;
+    }
+
+    .property-shell {
+      width: min(1180px, 92vw);
+      margin: 30px auto;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr 1fr;
+      grid-template-rows: 195px 195px;
+      gap: 12px;
+    }
+
+    .gallery div {
+      min-height: 0;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .gallery .hero {
+      grid-row: 1 / 3;
+      background-image: url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=82");
+    }
+    .gallery .g2 { background-image: url("https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80"); }
+    .gallery .g3 { background-image: url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=80"); }
+    .gallery .g4 { background-image: url("https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80"); }
+    .gallery .g5 { background-image: url("https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=80"); }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      gap: 42px;
+      padding-top: 32px;
+    }
+
+    .property-copy h1 {
+      margin: 0 0 8px;
+      font: 500 42px/1.14 "Playfair Display", Georgia, serif;
+    }
+
+    .eyebrow, .location { color: #6e7471; font-size: 14px; }
+    .property-copy h2 { margin: 30px 0 10px; font-size: 20px; }
+    .property-copy p { max-width: 690px; color: #636966; line-height: 1.8; }
+
+    .booking-card {
+      align-self: start;
+      padding: 24px;
+      border: 1px solid #e2e3df;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 10px 35px rgba(30,34,31,.06);
+    }
+
+    .price { font-size: 32px; font-weight: 700; }
+    .price small { color: #747a77; font-size: 13px; font-weight: 400; }
+    .booking-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+    .booking-row div { padding: 14px; border: 1px solid #dedfdb; border-radius: 10px; font-size: 13px; }
+    .book-button {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 18px;
+      color: white;
+      background: var(--accent);
+      font-weight: 700;
+    }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(18, 20, 19, .66);
+      backdrop-filter: blur(1.5px);
+    }
+
+    .modal {
+      width: min(700px, 100%);
+      max-height: calc(100vh - 44px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 13px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .modal-header {
+      position: relative;
+      z-index: 5;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.98);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font: 500 27px/1 "Playfair Display", Georgia, serif;
+    }
+
+    .close {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #3f4441;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .close:hover { background: var(--soft); }
+
+    .modal-body {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #a8aaa7 transparent;
+    }
+
+    .content { padding: 24px 28px 30px; }
+    .section { padding: 0 0 24px; margin: 0 0 24px; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; margin-bottom: 0; }
+
+    .stay-summary {
+      display: grid;
+      grid-template-columns: 136px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .stay-summary img {
+      width: 136px;
+      height: 102px;
+      display: block;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .stay-summary h3 { margin: 0 0 4px; font: 600 18px/1.3 "Playfair Display", Georgia, serif; }
+    .stay-summary p { margin: 4px 0; color: var(--muted); font-size: 13px; }
+    .stay-total { margin-top: 10px; font-weight: 700; }
+
+    .section-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .section-title h3 { margin: 0; font-size: 15px; }
+    .login-copy { margin: 0; color: var(--muted); font-size: 12px; }
+    .login-copy a { color: var(--ink); font-weight: 700; text-underline-offset: 3px; }
+
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #3e4541; font-size: 12px; font-weight: 600; }
+    .required { color: var(--accent-dark); }
+
+    .control, .phone-row select, .phone-row input {
+      width: 100%;
+      height: 49px;
+      border: 1px solid #dcdeda;
+      border-radius: 10px;
+      outline: none;
+      color: var(--ink);
+      background: #fbfbfa;
+      transition: border-color .18s, box-shadow .18s, background .18s;
+    }
+    .control { padding: 0 14px; }
+    textarea.control { height: 90px; padding: 13px 14px; resize: vertical; line-height: 1.45; }
+    .control:focus, .phone-row select:focus, .phone-row input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(223,123,18,.12);
+    }
+    .control[aria-invalid="true"], .phone-row input[aria-invalid="true"] { border-color: var(--danger); }
+    .error { min-height: 14px; margin: -2px 0 0; color: var(--danger); font-size: 11px; }
+
+    .phone-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
+    .phone-row select, .phone-row input { padding: 0 12px; }
+
+    .account-note {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #554019;
+      background: var(--accent-soft);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .account-note .icon { flex: 0 0 auto; font-weight: 800; }
+
+    .checkline {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 10px;
+      align-items: start;
+      margin-top: 15px;
+      color: #414743;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .checkline input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+
+    .coupon { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .coupon button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0 24px;
+      color: white;
+      background: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .payment-option {
+      display: grid;
+      grid-template-columns: 20px 1fr auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px 0;
+      cursor: pointer;
+    }
+    .payment-option input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); }
+    .payment-option strong { display: block; font-size: 13px; }
+    .payment-option small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .amount { font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+    .payment-note {
+      margin-top: 8px;
+      padding: 12px 14px;
+      border-radius: 7px;
+      color: #6d5431;
+      background: #f7e4cc;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .payment-types { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .payment-type {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px 14px;
+      border: 1px solid #dcdfdb;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .payment-type.selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(223,123,18,.11); }
+    .pay-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; color: var(--accent-dark); background: var(--accent-soft); }
+
+    .policy {
+      padding: 14px;
+      border-radius: 8px;
+      color: #9a3932;
+      background: #fff7f5;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .policy strong { display: block; margin-bottom: 6px; color: #c03b32; font-size: 12px; }
+    .policy ul { margin: 0; padding-left: 16px; }
+
+    .terms {
+      padding: 14px;
+      border-radius: 8px;
+      background: #fafaf8;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .terms strong { display: block; margin-bottom: 6px; font-size: 12px; }
+    .terms a { color: var(--ink); font-weight: 600; }
+
+    .sticky-action {
+      position: sticky;
+      bottom: 0;
+      z-index: 4;
+      padding: 14px 28px 18px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(to top, #fff 75%, rgba(255,255,255,.92));
+    }
+
+    .confirm {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--accent);
+      box-shadow: 0 8px 22px rgba(223,123,18,.18);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s, transform .18s;
+    }
+    .confirm:hover { background: var(--accent-dark); }
+    .confirm:active { transform: translateY(1px); }
+
+    .status {
+      display: none;
+      margin: 0 28px 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #164c36;
+      background: #e9f6ef;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .status.show { display: block; }
+
+    @media (max-width: 760px) {
+      body { overflow: hidden; }
+      .site-header { height: 60px; padding: 0 14px; }
+      .brand { font-size: 18px; letter-spacing: .36em; margin-right: -.36em; }
+      .header-side .pill:not(:first-child) { display: none; }
+      .property-shell { width: 94vw; margin-top: 16px; }
+      .gallery { grid-template-columns: 1fr 1fr; grid-template-rows: 170px 110px; }
+      .gallery .hero { grid-column: 1 / 3; grid-row: auto; }
+      .gallery .g4, .gallery .g5 { display: none; }
+      .property-grid { grid-template-columns: 1fr; }
+      .booking-card { display: none; }
+      .property-copy h1 { font-size: 34px; }
+      .scrim { padding: 0; align-items: stretch; }
+      .modal { width: 100%; max-height: 100vh; height: 100vh; border: 0; border-radius: 0; }
+      .modal-header { min-height: 64px; padding: 0 18px; }
+      .modal-header h2 { font-size: 23px; }
+      .content { padding: 20px 18px 24px; }
+      .stay-summary { grid-template-columns: 100px 1fr; gap: 13px; }
+      .stay-summary img { width: 100px; height: 82px; }
+      .field-grid { grid-template-columns: 1fr; gap: 13px; }
+      .field.full { grid-column: auto; }
+      .phone-row { grid-template-columns: 122px 1fr; }
+      .section-title { display: block; }
+      .login-copy { margin-top: 6px; }
+      .payment-types { grid-template-columns: 1fr; }
+      .sticky-action { padding: 12px 18px 16px; }
+      .status { margin-left: 18px; margin-right: 18px; }
+    }
+
+    @media (max-width: 420px) {
+      .stay-summary { align-items: start; }
+      .stay-summary img { width: 92px; height: 78px; }
+      .phone-row { grid-template-columns: 112px 1fr; }
+      .coupon { grid-template-columns: 1fr; }
+      .coupon button { min-height: 46px; }
+      .payment-option { grid-template-columns: 19px 1fr; }
+      .payment-option .amount { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-hidden="true">
+    <header class="site-header">
+      <div class="header-side"><span class="pill">☰&nbsp; Menu</span></div>
+      <div class="brand">STAY LUXE</div>
+      <div class="header-side"><span class="pill">List with us</span><span class="pill">NZD⌄</span></div>
+    </header>
+
+    <div class="property-shell">
+      <div class="gallery">
+        <div class="hero"></div><div class="g2"></div><div class="g3"></div><div class="g4"></div><div class="g5"></div>
+      </div>
+      <div class="property-grid">
+        <article class="property-copy">
+          <h1>On Rose</h1>
+          <div class="location">● Grey Lynn, Auckland, New Zealand</div>
+          <h2>Property Information</h2>
+          <div class="eyebrow">Private Residence &nbsp; · &nbsp; 4 Bedrooms &nbsp; · &nbsp; 3 Bathrooms &nbsp; · &nbsp; 8 Guests</div>
+          <h2>Description</h2>
+          <p>Behind a heritage villa façade in Grey Lynn, the interior opens into a calm, contemporary retreat with beautifully considered spaces and a private pool.</p>
+        </article>
+        <aside class="booking-card">
+          <div class="price">NZ$1,500 <small>night</small></div>
+          <div class="booking-row"><div>18 Nov – 09 Dec</div><div>2 guests</div></div>
+          <button class="book-button">Instant Book — NZ$31,643.31</button>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div class="scrim" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="booking-title">
+      <header class="modal-header">
+        <h2 id="booking-title">Booking Summary</h2>
+        <button class="close" type="button" aria-label="Close booking summary">×</button>
+      </header>
+
+      <div class="modal-body" id="modalBody">
+        <form id="bookingForm" novalidate>
+          <div class="content">
+            <section class="section stay-summary" aria-label="Selected stay">
+              <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=600&q=82" alt="Modern luxury residence with pool">
+              <div>
+                <h3>On Rose</h3>
+                <p>● Grey Lynn, Auckland, New Zealand</p>
+                <p>18 Nov 2026 – 09 Dec 2026 · 2 guests</p>
+                <div class="stay-total">Total: NZ$31,643.31</div>
+              </div>
+            </section>
+
+            <section class="section" id="guestDetails">
+              <div class="section-title">
+                <h3>Guest Details</h3>
+                <p class="login-copy">Already have an account? <a href="#" id="loginLink">Log in to autofill</a></p>
+              </div>
+
+              <div class="field-grid">
+                <div class="field">
+                  <label for="firstName">First name <span class="required">*</span></label>
+                  <input class="control" id="firstName" name="firstName" autocomplete="given-name" placeholder="Enter first name" required>
+                  <p class="error" id="firstNameError"></p>
+                </div>
+                <div class="field">
+                  <label for="lastName">Last name <span class="required">*</span></label>
+                  <input class="control" id="lastName" name="lastName" autocomplete="family-name" placeholder="Enter last name" required>
+                  <p class="error" id="lastNameError"></p>
+                </div>
+                <div class="field full">
+                  <label for="email">Email address <span class="required">*</span></label>
+                  <input class="control" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+                  <p class="error" id="emailError"></p>
+                </div>
+                <div class="field full">
+                  <label for="phone">Phone number <span class="required">*</span></label>
+                  <div class="phone-row">
+                    <select id="countryCode" name="countryCode" aria-label="Country calling code">
+                      <option value="+64">🇳🇿 +64</option>
+                      <option value="+61">🇦🇺 +61</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+65">🇸🇬 +65</option>
+                    </select>
+                    <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="Enter phone number" required>
+                  </div>
+                  <p class="error" id="phoneError"></p>
+                </div>
+              </div>
+
+              <div class="account-note">
+                <span class="icon">i</span>
+                <span>After your booking is completed, we’ll create your Stay Luxe account and email you a secure link to set your password and view your booking.</span>
+              </div>
+
+              <label class="checkline">
+                <input id="marketing" name="marketing" type="checkbox">
+                <span>Keep me updated with carefully selected Stay Luxe properties and private offers. Optional.</span>
+              </label>
+            </section>
+
+            <section class="section">
+              <div class="field">
+                <label for="requests">Additional requests or comments</label>
+                <textarea class="control" id="requests" name="requests" placeholder="For example: arrival time, dietary needs or accessibility requests"></textarea>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-title"><h3>Enter your coupon code</h3></div>
+              <div class="coupon">
+                <input class="control" id="coupon" name="coupon" placeholder="COUPON CODE">
+                <button type="button" id="applyCoupon">Apply</button>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-title"><h3>Payment Method</h3></div>
+              <label class="payment-option">
+                <input type="radio" name="amount" value="31643.31" checked>
+                <span><strong>Pay Full Amount</strong><small>Pay the complete amount now and confirm your booking.</small></span>
+                <span class="amount">NZ$31,643.31</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="amount" value="6328.66">
+                <span><strong>Pay Partial Amount (20%)</strong><small>Pay 20% now and the remaining 80% on the cancellation cut-off date.</small></span>
+                <span class="amount">NZ$6,328.66</span>
+              </label>
+              <div class="payment-note">
+                • Remaining balance is due on the cancellation cut-off date.<br>
+                • Your booking is confirmed once payment is successfully processed.<br>
+                • Your booking will be billed in NZD through our secure payment provider.
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-title"><h3>Payment Type</h3></div>
+              <div class="payment-types" role="radiogroup" aria-label="Payment type">
+                <button class="payment-type selected" type="button" data-payment="card" aria-pressed="true"><span class="pay-icon">▣</span> Credit / Debit Card</button>
+                <button class="payment-type" type="button" data-payment="bank" aria-pressed="false"><span class="pay-icon">▤</span> Bank Transfer</button>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="policy">
+                <strong>Cancellation Policy</strong>
+                <ul>
+                  <li>Full refund of the accommodation amount if cancelled more than 14 days before check-in.</li>
+                  <li>50% refund if cancelled between 14 days and 7 days before check-in.</li>
+                  <li>No refund if cancelled 7 days or less before check-in.</li>
+                  <li>The Stay Luxe processing/service fee is non-refundable.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="section">
+              <label class="checkline">
+                <input id="terms" name="terms" type="checkbox" required>
+                <span>I agree to the <a href="#">Host’s House Rules</a>, <a href="#">Privacy Policy</a>, <a href="#">Terms of Service</a>, <a href="#">Guest/Host Agreement</a> and the cancellation policy for this booking.</span>
+              </label>
+              <p class="error" id="termsError"></p>
+              <div class="terms">
+                <strong>Secure booking</strong>
+                Your details are used to process this booking, create or update your Stay Luxe account, and send essential booking communications.
+              </div>
+            </section>
+          </div>
+
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+          <div class="sticky-action">
+            <button class="confirm" id="confirmButton" type="submit">Confirm Payment of NZ$31,643.31</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('bookingForm');
+    const confirmButton = document.getElementById('confirmButton');
+    const modalBody = document.getElementById('modalBody');
+    const status = document.getElementById('status');
+    const money = new Intl.NumberFormat('en-NZ', { style: 'currency', currency: 'NZD' });
+
+    document.querySelectorAll('input[name="amount"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        confirmButton.textContent = `Confirm Payment of ${money.format(Number(radio.value))}`;
+      });
+    });
+
+    document.querySelectorAll('.payment-type').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.payment-type').forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle('selected', selected);
+          item.setAttribute('aria-pressed', String(selected));
+        });
+      });
+    });
+
+    document.getElementById('applyCoupon').addEventListener('click', () => {
+      const input = document.getElementById('coupon');
+      status.textContent = input.value.trim() ? 'Coupon code checked. This prototype does not apply a live discount.' : 'Enter a coupon code first.';
+      status.classList.add('show');
+    });
+
+    document.getElementById('loginLink').addEventListener('click', (event) => {
+      event.preventDefault();
+      status.textContent = 'Production behaviour: open login, then return here with these dates and guest selections preserved.';
+      status.classList.add('show');
+      document.getElementById('firstName').focus();
+    });
+
+    document.querySelector('.close').addEventListener('click', () => {
+      status.textContent = 'Prototype: the booking panel would close and return to the property page.';
+      status.classList.add('show');
+    });
+
+    function setError(id, message) {
+      const field = document.getElementById(id);
+      const error = document.getElementById(`${id}Error`);
+      if (field) field.setAttribute('aria-invalid', message ? 'true' : 'false');
+      if (error) error.textContent = message;
+      return !message;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      status.classList.remove('show');
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const terms = document.getElementById('terms').checked;
+
+      const valid = [
+        setError('firstName', firstName ? '' : 'Enter your first name.'),
+        setError('lastName', lastName ? '' : 'Enter your last name.'),
+        setError('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter a valid email address.'),
+        setError('phone', phone.replace(/\D/g, '').length >= 7 ? '' : 'Enter a valid phone number.'),
+        setError('terms', terms ? '' : 'Please accept the booking terms to continue.')
+      ].every(Boolean);
+
+      if (!valid) {
+        const firstInvalid = form.querySelector('[aria-invalid="true"]');
+        firstInvalid?.focus();
+        firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      status.textContent = `Prototype complete — ${firstName}, your booking details are ready. In production, payment would now be processed, your account/contact would be created or updated, and a password-set email would be sent.`;
+      status.classList.add('show');
+      status.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>
